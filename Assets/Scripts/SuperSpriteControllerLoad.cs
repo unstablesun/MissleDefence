@@ -29,21 +29,17 @@ public partial class SuperSpriteController : MonoBehaviour
 				float spacePosX = (float)UnityEngine.Random.Range (-mFieldVariables.spaceDeltaX, mFieldVariables.spaceDeltaX);
 				float spacePosY = (float)UnityEngine.Random.Range (-mFieldVariables.spaceDeltaY, mFieldVariables.spaceDeltaY);
 
-				_sfObj.transform.position = new Vector2 (spacePosX, spacePosY);
-
-				float scaleX = (float)UnityEngine.Random.Range (0.1f, 2f);
-				float scaleY = (float)UnityEngine.Random.Range (0.1f, 2f);
-				_sfObj.transform.localScale += new Vector3 (scaleX, scaleY, 1f);
+				_sfObj.transform.position = new Vector2 (CenterPoint.transform.position.x + spacePosX, CenterPoint.transform.position.y +spacePosY);
 
 
-				//_sfObj.transform.rotation = Quaternion.Euler(0, 0 + (float)t * 2, 0);
-
-				SuperSpriteObject superSpriteObjectScript = _sfObj.GetComponent<SuperSpriteObject> ();
-				superSpriteObjectScript.ID = t;
-				superSpriteObjectScript.velocity = 100f;
+				SuperSpriteObject objectScript = _sfObj.GetComponent<SuperSpriteObject> ();
+				objectScript.ID = t;
+				objectScript.velocity = 100f;
+				objectScript.SetBaseSpriteScale (0.25f, 0.25f);
 
 
 				SuperSpriteObjectList.Add (_sfObj);
+
 			} else {
 
 				Debug.Log ("Couldn't load super sprite prefab");

@@ -53,7 +53,7 @@ public partial class SpriteCanonController : MonoBehaviour
 		//test
 		//QueryStarFieldObjectsSetColor ();
 
-		Debug.Log ("SpriteCanonController Start");
+		//Debug.Log ("SpriteCanonController Start");
 
 	}
 
@@ -62,7 +62,7 @@ public partial class SpriteCanonController : MonoBehaviour
 
 	public void LaunchProjectile(Vector3 pos, SpriteCanonObject.eType type) 
 	{
-		Debug.Log ("SpriteCanonController LaunchProjectile");
+		//Debug.Log ("SpriteCanonController LaunchProjectile");
 		QueryForLaunchObject (pos, type);
 	}
 
@@ -126,7 +126,7 @@ public partial class SpriteCanonController : MonoBehaviour
 
 			if (objectScript._State == SpriteCanonObject.eState.Loaded) {
 
-				Debug.Log ("QueryForLaunchObject Object Found");
+				//Debug.Log ("QueryForLaunchObject Object Found");
 
 				objectScript.SetLaunchParameters (destination, type);
 				break;

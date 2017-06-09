@@ -247,6 +247,24 @@ public class SpriteCanonObject : MonoBehaviour
 	}
 
 
+	void OnCollisionEnter2D(Collision2D coll) 
+	{
+		Debug.Log ("OnCollisionEnter2D tag = " + coll.gameObject.tag.ToString() );
+
+		if (coll.gameObject.tag == "Enemy") {
+			coll.gameObject.SendMessage ("ApplyDamage", 10);
+		}
+
+	}
+
+	void OnTriggerEnter2D(Collider2D coll) {
+
+		if (coll.gameObject.tag == "Enemy") {
+			Debug.Log ("OnTriggerEnter2D tag = " + coll.gameObject.tag.ToString() );
+			coll.gameObject.SendMessage ("ApplyDamage", 10);
+		}
+	}
+
 
 
 	/*

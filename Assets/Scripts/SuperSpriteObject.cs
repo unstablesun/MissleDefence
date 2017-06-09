@@ -56,13 +56,17 @@ public class SuperSpriteObject : MonoBehaviour
 	void Start() 
 	{
 		startingPosition = transform.localPosition;
-
-
 	}
 	public void Reset() 
 	{
 		transform.localPosition = startingPosition;
 	}
+
+	public void SetBaseSpriteScale(float sx, float sy) 
+	{
+		baseSprite.transform.localScale = new Vector3 (sx, sy, 1f);
+	}
+
 
 	void Update() 
 	{
@@ -70,13 +74,20 @@ public class SuperSpriteObject : MonoBehaviour
 		//set a random set of rotations for cubes
 		//transform.Rotate(Vector3.up, _velocity * Time.deltaTime);
 		//transform.Rotate(Vector3.right, _velocity * Time.deltaTime);
-		transform.Rotate(Vector3.forward, _velocity * Time.deltaTime);
+		//transform.Rotate(Vector3.forward, _velocity * Time.deltaTime);
 
 			
 
 	}
 
 
+
+
+	public void ApplyDamage(int amount)
+	{
+		Debug.Log ("ApplyDamage amount = " + amount.ToString());
+	}
+		
 
 
 
