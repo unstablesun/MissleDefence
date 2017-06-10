@@ -96,6 +96,10 @@ public class SpriteCanonObject : MonoBehaviour
 
 	public void SetBaseSpriteScale(float sx, float sy) 
 	{
+		//scale collision rect too
+		//transform.localScale = new Vector3 (sx, sy, 1f);
+
+		//scale sprite
 		baseSprite.transform.localScale = new Vector3 (sx, sy, 1f);
 	}
 
@@ -246,24 +250,58 @@ public class SpriteCanonObject : MonoBehaviour
 		}
 	}
 
-
-	void OnCollisionEnter2D(Collision2D coll) 
+	public void CalculateDamage(Collider2D coll)
 	{
-		Debug.Log ("OnCollisionEnter2D tag = " + coll.gameObject.tag.ToString() );
+		Debug.Log ("CalculateDamage tag = " + coll.gameObject.tag.ToString ());
 
-		if (coll.gameObject.tag == "Enemy") {
-			coll.gameObject.SendMessage ("ApplyDamage", 10);
-		}
+
+		coll.gameObject.SendMessage ("ApplyDamage", (int)_fadeExplosionAlpha);
 
 	}
 
-	void OnTriggerEnter2D(Collider2D coll) {
 
-		if (coll.gameObject.tag == "Enemy") {
-			Debug.Log ("OnTriggerEnter2D tag = " + coll.gameObject.tag.ToString() );
-			coll.gameObject.SendMessage ("ApplyDamage", 10);
+	/*
+	void OnTriggerEnter2D(Collider2D coll) 
+	{
+		if (coll.gameObject.tag == "Enemy") 
+		{
+			Debug.Log ("OnTriggerEnter2D tag = " + coll.gameObject.tag.ToString ());
+
+			if (_ExplosionPhase == eExplosionPhase.fire) {
+				//apply burst amount of damage
+				coll.gameObject.SendMessage ("ApplyDamage", 512);
+			} else if(_ExplosionPhase == eExplosionPhase.fade) {
+				
+				//apply fade amount of damage
+				coll.gameObject.SendMessage ("ApplyDamage", (int)_fadeExplosionAlpha);
+			}
 		}
 	}
+
+	void OnTriggerStay2D(Collider2D coll) 
+	{
+
+		if (coll.gameObject.tag == "Enemy") {
+			Debug.Log ("OnTriggerStay2D tag = " + coll.gameObject.tag.ToString() );
+
+			//add exposure rate?
+
+
+			coll.gameObject.SendMessage ("ApplyDamage", (int)_fadeExplosionAlpha);
+		}
+	}
+
+	void OnTriggerExit2D(Collider2D coll) 
+	{
+
+		if (coll.gameObject.tag == "Enemy") {
+			Debug.Log ("OnTriggerExit2D tag = " + coll.gameObject.tag.ToString() );
+
+			//coll.gameObject.SendMessage ("ApplyDamage", 10);
+		}
+	}
+	*/
+
 
 
 
