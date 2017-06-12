@@ -34,7 +34,7 @@ public class SpriteCanonObject : MonoBehaviour
 	public eExplosionPhase _ExplosionPhase = eExplosionPhase.ready;
 
 
-	public GameObject baseSprite;//main body, also collision sprite?
+	public GameObject baseSprite;//main body
 	public GameObject secondarySprite;//addition animation support
 
 	private int _id = 0;
@@ -71,6 +71,11 @@ public class SpriteCanonObject : MonoBehaviour
 	float mGreen = 255f;
 	float mBlue = 255f;
 	float mAlpha = 255f;
+
+	float mExplosionRed = 0f;
+	float mExplosionGreen = 0f;
+	float mExplosionBlue = 0f;
+
 
 	private Vector3 _direction;
 	private Vector3 _currentPosition;
@@ -120,6 +125,10 @@ public class SpriteCanonObject : MonoBehaviour
 		_fadeExplosionAlpha = 64f;
 		_fadeFactor = 50f;
 
+		mExplosionRed = 0f;
+		mExplosionGreen = 255f;
+		mExplosionBlue = 0f;
+
 	}
 
 	void Update() 
@@ -161,7 +170,7 @@ public class SpriteCanonObject : MonoBehaviour
 			}
 			break;
 		}
-			
+
 	}
 		
 	public void SetLaunchParameters(Vector3 destination, eType type)
@@ -226,7 +235,7 @@ public class SpriteCanonObject : MonoBehaviour
 
 			SetBaseSpriteScale (_xScale, _yScale);
 
-			SetObjectColor (0, 255, 0, _fadeExplosionAlpha);
+			SetObjectColor (mExplosionRed, mExplosionGreen, mExplosionBlue, _fadeExplosionAlpha);
 
 			_elaspedExplosionTime += Time.deltaTime;
 			if (_elaspedExplosionTime >= _explosionTime) {
@@ -246,62 +255,37 @@ public class SpriteCanonObject : MonoBehaviour
 
 				}
 			}
-			SetObjectColor (0, 255, 0, _fadeExplosionAlpha);
+			SetObjectColor (mExplosionRed, mExplosionGreen, mExplosionBlue, _fadeExplosionAlpha);
 		}
 	}
 
-	public void CalculateDamage(Collider2D coll)
+	public void CalculateDamageBlast(Collider2D coll)
 	{
-		Debug.Log ("CalculateDamage tag = " + coll.gameObject.tag.ToString ());
+		if(_State == eState.Exploding) {
+			Debug.Log ("CalculateDamageBlast tag = " + coll.gameObject.tag.ToString ());
 
+			int damage = 512;
+			mExplosionRed = 255f;
+			mExplosionGreen = 0;
+			mExplosionBlue = 0f;
 
-		coll.gameObject.SendMessage ("ApplyDamage", (int)_fadeExplosionAlpha);
-
-	}
-
-
-	/*
-	void OnTriggerEnter2D(Collider2D coll) 
-	{
-		if (coll.gameObject.tag == "Enemy") 
-		{
-			Debug.Log ("OnTriggerEnter2D tag = " + coll.gameObject.tag.ToString ());
-
-			if (_ExplosionPhase == eExplosionPhase.fire) {
-				//apply burst amount of damage
-				coll.gameObject.SendMessage ("ApplyDamage", 512);
-			} else if(_ExplosionPhase == eExplosionPhase.fade) {
-				
-				//apply fade amount of damage
-				coll.gameObject.SendMessage ("ApplyDamage", (int)_fadeExplosionAlpha);
-			}
+			coll.gameObject.SendMessage ("ApplyDamage", damage);
 		}
 	}
 
-	void OnTriggerStay2D(Collider2D coll) 
+	public void CalculateDamageBurn(Collider2D coll)
 	{
+		if(_State == eState.Exploding) {
+			Debug.Log ("CalculateDamageBlast tag = " + coll.gameObject.tag.ToString ());
 
-		if (coll.gameObject.tag == "Enemy") {
-			Debug.Log ("OnTriggerStay2D tag = " + coll.gameObject.tag.ToString() );
+			int damage = (int)_fadeExplosionAlpha;
+			mExplosionRed = 255f;
+			mExplosionGreen = 0;
+			mExplosionBlue = 0f;
 
-			//add exposure rate?
-
-
-			coll.gameObject.SendMessage ("ApplyDamage", (int)_fadeExplosionAlpha);
+			coll.gameObject.SendMessage ("ApplyDamage", damage);
 		}
 	}
-
-	void OnTriggerExit2D(Collider2D coll) 
-	{
-
-		if (coll.gameObject.tag == "Enemy") {
-			Debug.Log ("OnTriggerExit2D tag = " + coll.gameObject.tag.ToString() );
-
-			//coll.gameObject.SendMessage ("ApplyDamage", 10);
-		}
-	}
-	*/
-
 
 
 
@@ -330,7 +314,7 @@ public class SpriteCanonObject : MonoBehaviour
 			mAlpha = alpha;
 			baseSprite.GetComponent<Renderer> ().material.color = new Color32 ((byte)mRed, (byte)mGreen, (byte)mBlue, (byte)mAlpha);
 		}
-	}
+	}		
 
 
 
