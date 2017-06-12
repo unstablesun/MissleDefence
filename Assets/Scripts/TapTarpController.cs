@@ -15,10 +15,6 @@ using UnityEngine.EventSystems;
 public class TapTarpController : MonoBehaviour 
 {
 
-	//private List <GameObject> TarpObjectList = null;
-
-	//private GameObject TarpObjectContainer;
-
 	public float LaunchCoolDown = 1f;
 
 	private bool _mouseDown = false;
@@ -41,7 +37,6 @@ public class TapTarpController : MonoBehaviour
 		
 			Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			target.z = 0;
-			//gameObject.transform.position = target; 
 
 			_mouseDown = true;
 			_elaspedTime = 0f;

@@ -8,21 +8,31 @@ public class SuperSpriteObject : MonoBehaviour
 
 	public enum eType 
 	{
-		quad,
-		cube, 
-		composite
+		ship,
+		shipBomb, 
+		missle,
+		nuke
 	};
-	public eType _type = eType.quad;
+	public eType _type = eType.missle;
 
-	public enum eTask 
+
+
+	public enum eState 
 	{
 		NoOp,
-		TransCamera, 
-		OpenCanvas
+		Ready,
+		Loaded,
+		InFlight,
+		Exploding,
+		DiveBomb,
+		Dead
 	};
-	public eTask _task = eTask.NoOp;
+	public eState _State = eState.NoOp;
 
-	public GameObject baseSprite;
+
+	public GameObject primarySprite = null;
+	public GameObject secondarySprite = null;
+	public GameObject tertiarySprite = null;
 
 	private Vector3 startingPosition;
 
@@ -37,7 +47,13 @@ public class SuperSpriteObject : MonoBehaviour
 		get {return _velocity; } 
 		set {_velocity = value; }
 	}
-
+		
+	private AlienDataManager.ModuleData mModuleData = null;
+	public AlienDataManager.ModuleData ModuleData
+	{
+		get { return mModuleData; }
+		set { mModuleData = value; }
+	}
 
 
 	float mRed = 128f;
@@ -65,7 +81,7 @@ public class SuperSpriteObject : MonoBehaviour
 
 	public void SetBaseSpriteScale(float sx, float sy) 
 	{
-		baseSprite.transform.localScale = new Vector3 (sx, sy, 1f);
+		primarySprite.transform.localScale = new Vector3 (sx, sy, 1f);
 	}
 
 
@@ -104,10 +120,10 @@ public class SuperSpriteObject : MonoBehaviour
 	public void SetVertexColors(int type) 
 	{
 
-		if (baseSprite != null) {
+		if (primarySprite != null) {
 			Debug.Log ("SetVertexColors");
 
-			Mesh mesh = baseSprite.GetComponent<MeshFilter> ().mesh;
+			Mesh mesh = primarySprite.GetComponent<MeshFilter> ().mesh;
 			Vector3[] vertices = mesh.vertices;
 
 			// create new colors array where the colors will be created.
@@ -128,11 +144,11 @@ public class SuperSpriteObject : MonoBehaviour
 
 	public void SetObjectColor(int type) 
 	{
-		if (baseSprite != null) {
+		if (primarySprite != null) {
 			mRed = (float)Random.Range (0f, 255f);
 			mGreen = (float)Random.Range (0f, 255f);
 			mBlue = (float)Random.Range (0f, 255f);
-			baseSprite.GetComponent<Renderer> ().material.color = new Color32 ((byte)mRed, (byte)mGreen, (byte)mBlue, (byte)mAlpha);
+			primarySprite.GetComponent<Renderer> ().material.color = new Color32 ((byte)mRed, (byte)mGreen, (byte)mBlue, (byte)mAlpha);
 		}
 	}
 

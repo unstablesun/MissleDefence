@@ -36,6 +36,17 @@ public class CanonBallCollision : MonoBehaviour
 		LineDrawerUpdate();
 	}
 
+
+
+
+
+
+	/*
+	 * --------------------------------------------------------
+							Debug Draw
+	 * --------------------------------------------------------
+	*/
+
 	LineRenderer lineRenderer = null;
 	void LineDrawerUpdate ()
 	{    

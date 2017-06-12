@@ -8,14 +8,14 @@ using UnityEngine.EventSystems;
 
 //------------------------------------------------------
 /*
- 				Cube Controller
+ 				Super Sprite Controller Load
 */
 //------------------------------------------------------
 public partial class SuperSpriteController : MonoBehaviour 
 {
 	private void LoadSuperSprites()
 	{
-		for (int t = 0; t < mFieldVariables.numSprites; t++) {
+		for (int t = 0; t < objectPoolSize; t++) {
 
 			GameObject _sfObj = Instantiate (Resources.Load ("Prefabs/SuperSpriteObject", typeof(GameObject))) as GameObject;
 

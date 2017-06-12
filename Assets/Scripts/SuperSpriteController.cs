@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 
 //------------------------------------------------------
 /*
- 				Star Field Controller
+ 				Super Sprite Controller
 */
 //------------------------------------------------------
 
@@ -32,7 +32,6 @@ public partial class SuperSpriteController : MonoBehaviour
 	private List <GameObject> SuperSpriteObjectList = null;
 
 
-	//private List <Vector3> ObjectVectorList = null;
 
 	private GameObject SuperSpriteObjectContainer;
 
@@ -55,69 +54,45 @@ public partial class SuperSpriteController : MonoBehaviour
 
 		LoadSuperSprites ();
 
-
+		QuerySetObjectsLoaded ();
 		//QueryStarFieldQuadSetVertexColors ();
 
 		QueryStarFieldObjectsSetColor ();
 	}
 
 
-	bool QuerySuperSpriteObjectsForOverlap(GameObject currentObj) 
+	public void LaunchAttackShip(Vector3 pos, SpriteCanonObject.eType type) 
 	{
-		Vector3 pos = currentObj.transform.position;
+		
+	}
 
-		bool overlap = false;
 
+	void QuerySetObjectsLoaded() 
+	{
 		foreach(GameObject tObj in SuperSpriteObjectList)
 		{
-			Vector3 _pos = tObj.transform.position;
+			SuperSpriteObject objectScript = tObj.GetComponent<SuperSpriteObject> ();
+			objectScript._State = SuperSpriteObject.eState.Loaded;
+		}
+	}
 
-			float distance = Vector3.Distance (pos, _pos);
+	void QueryForLaunchObject(Vector3 destination, SpriteCanonObject.eType type) 
+	{
+		foreach(GameObject tObj in SuperSpriteObjectList)
+		{
+			SuperSpriteObject objectScript = tObj.GetComponent<SuperSpriteObject> ();
 
-			if (distance < mFieldVariables.separationSphereRadiusSquared) {
-				overlap = true;
+			if (objectScript._State == SuperSpriteObject.eState.Loaded) {
+
+				//Debug.Log ("QueryForLaunchObject Object Found");
+
+				//objectScript.SetLaunchParameters (destination, type);
 				break;
 			}
 		}
-
-		return overlap;
 	}
 
-	GameObject QueryFindClosestToObj(GameObject currentObj) 
-	{
-		Vector3 pos = currentObj.transform.position;
 
-		SuperSpriteObject starFieldObjectScript = currentObj.GetComponent<SuperSpriteObject> ();
-		int ID = starFieldObjectScript.ID;
-		bool checkSelf = true;
-		GameObject closestObj = null;
-
-		float min_distance = 1000f;
-
-		foreach(GameObject tObj in SuperSpriteObjectList)
-		{
-			Vector3 _pos = tObj.transform.position;
-
-			if (checkSelf == true) {
-				starFieldObjectScript = currentObj.GetComponent<SuperSpriteObject> ();
-				int id = starFieldObjectScript.ID;
-
-				if (id == ID) {
-					checkSelf = false;
-					continue;
-				}
-			}
-
-			float distance = Vector3.Distance (pos, _pos);
-
-			if (distance < min_distance) {
-				min_distance = distance;
-				closestObj = tObj;
-			}
-		}
-
-		return closestObj;
-	}
 
 	GameObject QueryFindClosestToPos(Vector3 targetPos) 
 	{
@@ -158,10 +133,8 @@ public partial class SuperSpriteController : MonoBehaviour
 		{
 			SuperSpriteObject starFieldObjectScript = tObj.GetComponent<SuperSpriteObject> ();
 
-			if (starFieldObjectScript._type == SuperSpriteObject.eType.quad) {
-				
-				starFieldObjectScript.SetObjectColor (0);
-			}
+			starFieldObjectScript.SetObjectColor (0);
+
 		}
 	}
 
@@ -171,14 +144,8 @@ public partial class SuperSpriteController : MonoBehaviour
 	{
 		foreach(GameObject tObj in SuperSpriteObjectList)
 		{
-			SuperSpriteObject starFieldObjectScript = tObj.GetComponent<SuperSpriteObject> ();
+			//SuperSpriteObject starFieldObjectScript = tObj.GetComponent<SuperSpriteObject> ();
 
-			if (starFieldObjectScript._type == SuperSpriteObject.eType.cube) {
-
-
-
-
-			}
 		}
 	}
 
