@@ -8,6 +8,9 @@ using System;
 public class WayPointList : MonoBehaviour 
 {
 	[SerializeField]
+	public string PrefabName = "WayPointX";
+
+	[SerializeField]
 	public int NumPointsUsed = 0;
 
 	[SerializeField]

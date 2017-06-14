@@ -28,7 +28,10 @@ public class WayPointManager : MonoBehaviour
 	public int NumPointsUsed = 0;
 
 	[SerializeField]
-	public GameObject[] mWayPointStartPos = null;
+	public int MaxPoints = 16;
+
+	[SerializeField]
+	public GameObject[] mWayPointEditList = null;
 
 
 	[MenuItem("WayPoints/Save WayPoint Prefab")]
@@ -36,7 +39,7 @@ public class WayPointManager : MonoBehaviour
 	{
 		if(WayPointManager.Instance != null) {
 
-			if (WayPointManager.Instance.mWayPointStartPos != null) {
+			if (WayPointManager.Instance.mWayPointEditList != null) {
 
 				WayPointManager.Instance.CreateAndSavePrefab ();
 
@@ -44,15 +47,40 @@ public class WayPointManager : MonoBehaviour
 		}
 	}
 
-	[MenuItem("WayPoints/Load Current Prefabs")]
-	private static void LoadCurrentPrefabs () 
+	private void CreateAndSavePrefab () 
+	{
+		GameObject objectPrefab = new GameObject(PrefabName);
+
+		WayPointList scriptRef = objectPrefab.AddComponent<WayPointList>() as WayPointList;
+
+		//int length = WayPointManager.Instance.mWayPointEditList.GetLength (0);
+		int length = NumPointsUsed;
+		scriptRef.InitList (length);
+		for (int i = 0; i < length; i++) {
+
+			Vector3 vec = WayPointManager.Instance.mWayPointEditList [i].transform.position;
+
+			scriptRef.AddVector3 (vec, i);
+
+			//Debug.Log ("vec.x = " + vec.x + " vec.y = " + vec.y);
+
+		}
+		scriptRef.PrefabName = PrefabName;
+		scriptRef.NumPointsUsed = NumPointsUsed;
+
+		UnityEngine.Object prefab = PrefabUtility.CreateEmptyPrefab("Assets/Resources/Prefabs/WayPoints/"+objectPrefab.name+".prefab");
+		PrefabUtility.ReplacePrefab(objectPrefab, prefab, ReplacePrefabOptions.ConnectToPrefab);
+	}
+
+
+
+	[MenuItem("WayPoints/Load WayPoint Prefabs")]
+	private static void LoadWayPointPrefabs () 
 	{
 
 		DirectoryInfo dirInfo = new DirectoryInfo("Assets/Resources/Prefabs/WayPoints/");
 		FileInfo[] fileInf = dirInfo.GetFiles("*.prefab");
 		foreach (FileInfo file in fileInf) {
-
-			//Debug.Log("file.Name = " + file.Name);
 
 			UnityEngine.Object prefab = AssetDatabase.LoadAssetAtPath("Assets/Resources/Prefabs/WayPoints/" + file.Name, typeof(GameObject));
 			PrefabUtility.InstantiatePrefab(prefab);
@@ -69,8 +97,8 @@ public class WayPointManager : MonoBehaviour
 		}
 	}
 
-	[MenuItem("WayPoints/Set Current WayPoint")]
-	private static void SetCurrentWatPoint () 
+	[MenuItem("WayPoints/Edit Selected WayPoint")]
+	private static void EditSelectedWayPoint () 
 	{
 
 		GameObject selectedGameObject = Selection.activeGameObject;
@@ -85,34 +113,26 @@ public class WayPointManager : MonoBehaviour
 		GameObject WayPointManagerObject = GameObject.Find ("WayPointManager");
 		WayPointManager wpManager = WayPointManagerObject.GetComponent<WayPointManager> ();
 		string  pName = wpManager.PrefabName;
+		int numPoints = wpList.NumPointsUsed;
+
+		wpManager.PrefabName = wpList.PrefabName;
+		wpManager.NumPointsUsed = wpList.NumPointsUsed;
+
+		for (int i = 0; i < numPoints; i++) {
+
+			Vector3 vec = wpList.GetVector3AtIndex (i);
+			WayPointManager.Instance.mWayPointEditList [i].transform.position = new Vector3(vec.x, vec.y, vec.z);
+
+			Debug.Log ("vec.x = " + vec.x + " vec.y = " + vec.y);
+
+		}
+
+
 
 		Debug.Log ("wpManager pName = " + pName);
 
 	}
 
-
-	private void CreateAndSavePrefab () 
-	{
-		GameObject objectPrefab = new GameObject(PrefabName);
-
-		WayPointList scriptRef = objectPrefab.AddComponent<WayPointList>() as WayPointList;
-
-		int length = WayPointManager.Instance.mWayPointStartPos.GetLength (0);
-		scriptRef.InitList (length);
-		for (int i = 0; i < length; i++) {
-
-			Vector3 vec = WayPointManager.Instance.mWayPointStartPos [i].transform.position;
-
-			scriptRef.AddVector3 (vec, i);
-
-			Debug.Log ("vec.x = " + vec.x + " vec.y = " + vec.y);
-
-		}
-		scriptRef.NumPointsUsed = NumPointsUsed;
-			
-		UnityEngine.Object prefab = PrefabUtility.CreateEmptyPrefab("Assets/Resources/Prefabs/WayPoints/"+objectPrefab.name+".prefab");
-		PrefabUtility.ReplacePrefab(objectPrefab, prefab, ReplacePrefabOptions.ConnectToPrefab);
-	}
 
 }
 
