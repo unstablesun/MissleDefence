@@ -48,8 +48,8 @@ public class SuperSpriteObject : MonoBehaviour
 		set {_velocity = value; }
 	}
 		
-	private AlienDataManager.ModuleData mModuleData = null;
-	public AlienDataManager.ModuleData ModuleData
+	private AlienModuleData mModuleData = null;
+	public AlienModuleData ModuleData
 	{
 		get { return mModuleData; }
 		set { mModuleData = value; }
