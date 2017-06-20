@@ -33,7 +33,11 @@ public class WayPointManager : MonoBehaviour
 	[SerializeField]
 	public GameObject[] mWayPointEditList = null;
 
+	[SerializeField]
+	public WayPoint[] mWayPointEditStructs = null;
 
+
+	//This must be called at runtime
 	[MenuItem("WayPoints/Save WayPoint Prefab")]
 	private static void SaveWayPointPrefab()
 	{
@@ -59,10 +63,10 @@ public class WayPointManager : MonoBehaviour
 		for (int i = 0; i < length; i++) {
 
 			Vector3 vec = WayPointManager.Instance.mWayPointEditList [i].transform.position;
-
 			scriptRef.AddVector3 (vec, i);
 
-			//Debug.Log ("vec.x = " + vec.x + " vec.y = " + vec.y);
+			WayPoint wp = WayPointManager.Instance.mWayPointEditStructs [i];
+			scriptRef.AddWayPoint (wp, i);
 
 		}
 		scriptRef.PrefabName = PrefabName;
@@ -74,6 +78,7 @@ public class WayPointManager : MonoBehaviour
 
 
 
+	//This can be called when editing
 	[MenuItem("WayPoints/Load WayPoint Prefabs")]
 	private static void LoadWayPointPrefabs () 
 	{
@@ -85,18 +90,10 @@ public class WayPointManager : MonoBehaviour
 			UnityEngine.Object prefab = AssetDatabase.LoadAssetAtPath("Assets/Resources/Prefabs/WayPoints/" + file.Name, typeof(GameObject));
 			PrefabUtility.InstantiatePrefab(prefab);
 
-			/*
-			GameObject WayPointContainer = GameObject.Find ("LoadedWayPoints");
-			Debug.Log ("WayPointContainer = " + WayPointContainer.name);
-
-			if (WayPointContainer != null) {
-				prefab.transform.parent = WayPointContainer.transform;
-			}
-			*/
-
 		}
 	}
 
+	//This must be called at runtime
 	[MenuItem("WayPoints/Edit Selected WayPoint")]
 	private static void EditSelectedWayPoint () 
 	{
@@ -109,7 +106,6 @@ public class WayPointManager : MonoBehaviour
 
 
 		//this is the WayPointManager
-
 		GameObject WayPointManagerObject = GameObject.Find ("WayPointManager");
 		WayPointManager wpManager = WayPointManagerObject.GetComponent<WayPointManager> ();
 		string  pName = wpManager.PrefabName;
@@ -118,17 +114,17 @@ public class WayPointManager : MonoBehaviour
 		wpManager.PrefabName = wpList.PrefabName;
 		wpManager.NumPointsUsed = wpList.NumPointsUsed;
 
+		Debug.Log ("EditSelectedWayPoint : numPoints = " + numPoints);
 		for (int i = 0; i < numPoints; i++) {
 
 			Vector3 vec = wpList.GetVector3AtIndex (i);
 			WayPointManager.Instance.mWayPointEditList [i].transform.position = new Vector3(vec.x, vec.y, vec.z);
 
-			Debug.Log ("vec.x = " + vec.x + " vec.y = " + vec.y);
+			WayPoint wp = wpList.GetWayPointAtIndex (i);
+			WayPointManager.Instance.mWayPointEditStructs [i] = wp;
 
 		}
-
-
-
+			
 		Debug.Log ("wpManager pName = " + pName);
 
 	}
