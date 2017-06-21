@@ -107,7 +107,7 @@ public partial class AlienAttackController : MonoBehaviour
 		foreach(GameObject tObj in AlienAttackObjectList)
 		{
 			AlienAttackObject objectScript = tObj.GetComponent<AlienAttackObject> ();
-			objectScript._State = AlienAttackObject.eState.Loaded;
+			objectScript._State = AlienAttackObject.eState.Ready;
 		}
 	}
 
@@ -117,7 +117,7 @@ public partial class AlienAttackController : MonoBehaviour
 		{
 			AlienAttackObject objectScript = tObj.GetComponent<AlienAttackObject> ();
 
-			if (objectScript._State == AlienAttackObject.eState.Loaded) {
+			if (objectScript._State == AlienAttackObject.eState.Ready) {
 
 				//Debug.Log ("QueryForLaunchObject Object Found");
 

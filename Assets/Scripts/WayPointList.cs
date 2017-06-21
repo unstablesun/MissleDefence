@@ -17,14 +17,14 @@ public class WayPointList : MonoBehaviour
 	public Vector3[] mWayPointList = null;
 
 	[SerializeField]
-	public WayPoint[] mWayPointStuct = null;
+	public WayPoint[] mWayPointData = null;
 
 
 	public void InitList(int size)
 	{
 		mWayPointList = new Vector3[size];
 
-		mWayPointStuct = new WayPoint[size];
+		mWayPointData = new WayPoint[size];
 	}
 
 	public void AddVector3(Vector3 vec, int index)
@@ -39,12 +39,12 @@ public class WayPointList : MonoBehaviour
 
 	public void AddWayPoint(WayPoint wp, int index)
 	{
-		mWayPointStuct[index] = wp;            
+		mWayPointData[index] = wp;            
 	}
 
 	public WayPoint GetWayPointAtIndex(int index)
 	{
-		return( mWayPointStuct[index] );            
+		return( mWayPointData[index] );            
 	}
 
 

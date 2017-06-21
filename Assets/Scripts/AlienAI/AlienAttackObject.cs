@@ -21,10 +21,10 @@ public class AlienAttackObject : MonoBehaviour
 	{
 		NoOp,
 		Ready,
-		Loaded,
-		InFlight,
-		Exploding,
-		DiveBomb,
+		CalculatePath,
+		MoveToPoint,
+		ReachedPoint,
+		EndMove,
 		Dead
 	};
 	public eState _State = eState.NoOp;
@@ -48,6 +48,26 @@ public class AlienAttackObject : MonoBehaviour
 		set {_velocity = value; }
 	}
 
+	private Vector3 _storagePosition;
+	public Vector3 StoragePosition {
+		get {return _storagePosition; } 
+		set {_storagePosition = value; }
+	}
+
+	private Vector3 _startPosition;
+	public Vector3 StartPosition {
+		get {return _startPosition; } 
+		set {_startPosition = value; }
+	}
+
+	private Vector3 _destinationPosition;
+	public Vector3 DestinationPosition {
+		get {return _destinationPosition; } 
+		set {_destinationPosition = value; }
+	}
+
+
+
 	private AlienModuleData mModuleData = null;
 	public AlienModuleData ModuleData
 	{
@@ -61,6 +81,9 @@ public class AlienAttackObject : MonoBehaviour
 	float mBlue = 128f;
 	float mAlpha = 255f;
 
+	private Vector3 _direction;
+	private Vector3 _currentPosition;
+	private float _fightMagnitude;
 
 	//private float _elaspedTime = 0f;
 
@@ -72,11 +95,11 @@ public class AlienAttackObject : MonoBehaviour
 
 	void Start() 
 	{
-		startingPosition = transform.localPosition;
+		startingPosition = _storagePosition;
 	}
 	public void Reset() 
 	{
-		transform.localPosition = startingPosition;
+		transform.localPosition = _storagePosition;
 	}
 
 	public void SetBaseSpriteScale(float sx, float sy) 
@@ -88,16 +111,79 @@ public class AlienAttackObject : MonoBehaviour
 	void Update() 
 	{
 
-		//set a random set of rotations for cubes
-		//transform.Rotate(Vector3.up, _velocity * Time.deltaTime);
-		//transform.Rotate(Vector3.right, _velocity * Time.deltaTime);
-		//transform.Rotate(Vector3.forward, _velocity * Time.deltaTime);
+		switch (_State) 
+		{
+
+		case eState.NoOp:
+		case eState.Ready:
+			Reset ();
+			break;
+
+		case eState.CalculatePath:
+			{
+				CalculateFlightPath ();
+			}
+			break;
+
+		case eState.MoveToPoint:
+			{
+				UpdateFlightPath ();
+			}
+			break;
+
+		case eState.ReachedPoint:
+			{
+				FindNextWayPoint ();
+			}
+			break;
+
+		case eState.Dead:
+			{
+				_State = eState.Ready;
+			}
+			break;
+		}
 
 		LineDrawerUpdate();
 
 
 	}
 
+
+	private void CalculateFlightPath()
+	{
+		transform.localPosition = _startPosition;
+
+		_currentPosition = _startPosition;
+		_direction = _destinationPosition - _startPosition;
+		_fightMagnitude = _direction.magnitude;
+		_direction.Normalize ();
+
+		_State = eState.MoveToPoint;
+
+	}
+
+	private void UpdateFlightPath()
+	{
+		Vector3 increment = _direction * (Time.deltaTime * _velocity);
+
+		_currentPosition += increment;
+
+		transform.localPosition = _currentPosition;
+
+		Vector3 directionVec = _currentPosition - _startPosition;
+		float directionMag = directionVec.magnitude;
+
+		if (directionMag > _fightMagnitude) {
+			_State = eState.ReachedPoint;
+		}
+	}
+
+
+	private void FindNextWayPoint()
+	{
+		
+	}
 
 
 
@@ -118,7 +204,7 @@ public class AlienAttackObject : MonoBehaviour
 	 * --------------------------------------------------------
 	*/
 
-	public void SetObjectColor(int type) 
+	public void SetRandomObjectColor(int type) 
 	{
 		if (primarySprite != null) {
 			mRed = (float)Random.Range (0f, 255f);

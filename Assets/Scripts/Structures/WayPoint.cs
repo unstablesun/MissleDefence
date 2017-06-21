@@ -21,6 +21,10 @@ public class WayPoint
 	public float _decelaration = 0f;
 	[SerializeField]
 	public float _minVelocity = 0f;
+	[SerializeField]
+	public float _chanceToReverse = 0f;
+	[SerializeField]
+	public float _chanceToSkip = 0f;
 
 
 	public float WaitTime
@@ -57,6 +61,18 @@ public class WayPoint
 	{
 		get { return _minVelocity; }
 		set { _minVelocity = value; }
+	}
+
+	public float ChanceToReverse
+	{
+		get { return _chanceToReverse; }
+		set { _chanceToReverse = value; }
+	}
+
+	public float ChanceToSkip
+	{
+		get { return _chanceToSkip; }
+		set { _chanceToSkip = value; }
 	}
 
 }
