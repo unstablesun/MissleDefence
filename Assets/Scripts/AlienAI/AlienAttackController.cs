@@ -15,27 +15,13 @@ using UnityEngine.EventSystems;
 public partial class AlienAttackController : MonoBehaviour 
 {
 
-	public GameObject StoragePoint;//default position
-
-
-	[System.Serializable]
-	public class FieldVariables
-	{
-		public float separationSphereRadiusSquared = 8f;
-
-		public int numSprites = 32;
-		public float spaceDeltaX = 32f;
-		public float spaceDeltaY= 32f;
-	}
-	public FieldVariables mFieldVariables;
+	public GameObject StoragePoint;
 
 	private List <GameObject> AlienAttackObjectList = null;
 
-
-
 	private GameObject AlienAttackObjectContainer;
 
-	private const int objectPoolSize = 64;
+	//private const int objectPoolSize = 64;
 
 
 	public static AlienAttackController Instance;
@@ -60,38 +46,60 @@ public partial class AlienAttackController : MonoBehaviour
 
 	private void LoadAttackManifest()
 	{
-		for (int t = 0; t < objectPoolSize; t++) {
+		string manifestName = "ManifestListArea1";
 
-			GameObject _sfObj = Instantiate (Resources.Load ("Prefabs/SuperSpriteObject", typeof(GameObject))) as GameObject;
+		GameObject _meObj = Instantiate (Resources.Load ("Prefabs/Manifests/" + manifestName, typeof(GameObject))) as GameObject;
 
-			if (_sfObj != null) {
+		ManifestList manifestScript = _meObj.GetComponent<ManifestList> ();
 
-				if (AlienAttackObjectContainer != null) {
-					_sfObj.transform.parent = AlienAttackObjectContainer.transform;
+		int numEntries = manifestScript.NumEntriesUsed;
+		Debug.Log ("LoadAttackManifest : numEntries = " + numEntries.ToString());
+
+		int runningIndex = 0;
+
+		for (int e = 0; e < numEntries; e++) {
+
+			ManifestEntry me = manifestScript.GetManifestEntryAtIndex (e);
+
+			int numToLoad = me.NumToLoad;
+			string alienPrefabName = me.PrefabName;
+			WayPointList startingPoints = me.StartingPoints;
+
+
+
+			for (int i = 0; i < numToLoad; i++) {
+
+				//TODO need to load a AlienAttackObject first, then load the module data and attach it
+
+				GameObject _aaObj = Instantiate (Resources.Load ("Prefabs/AlienAttackObject", typeof(GameObject))) as GameObject;
+
+				if (_aaObj != null) {
+
+
+					if (AlienAttackObjectContainer != null) {
+						_aaObj.transform.parent = AlienAttackObjectContainer.transform;
+					}
+					_aaObj.name = "attackObj" + runningIndex.ToString ();
+
+
+					_aaObj.transform.position = new Vector2 (StoragePoint.transform.position.x, StoragePoint.transform.position.y);
+
+
+					Vector3 vec = startingPoints.GetVector3AtIndex (i);
+					Debug.Log("vec = " + vec.x.ToString() + " "  + vec.y.ToString() + " " + vec.z.ToString());
+
+
+					AlienAttackObjectList.Add (_aaObj);
+
+					runningIndex++;
+
 				}
-				_sfObj.name = "attackObj" + t.ToString ();
 
-				float spacePosX = (float)UnityEngine.Random.Range (-mFieldVariables.spaceDeltaX, mFieldVariables.spaceDeltaX);
-				float spacePosY = (float)UnityEngine.Random.Range (-mFieldVariables.spaceDeltaY, mFieldVariables.spaceDeltaY);
-
-				_sfObj.transform.position = new Vector2 (StoragePoint.transform.position.x + spacePosX, StoragePoint.transform.position.y +spacePosY);
-
-
-				AlienAttackObject objectScript = _sfObj.GetComponent<AlienAttackObject> ();
-				objectScript.ID = t;
-				objectScript.velocity = 100f;
-				objectScript.SetBaseSpriteScale (0.25f, 0.25f);
-
-
-				AlienAttackObjectList.Add (_sfObj);
-
-			} else {
-
-				Debug.Log ("Couldn't load attack sprite prefab");
 			}
-
+				
 
 		}
+			
 	}
 
 
@@ -111,6 +119,13 @@ public partial class AlienAttackController : MonoBehaviour
 		}
 	}
 
+
+
+
+
+
+
+	/*
 	void QueryForLaunchObject(Vector3 destination, SpriteCanonObject.eType type) 
 	{
 		foreach(GameObject tObj in AlienAttackObjectList)
@@ -149,7 +164,57 @@ public partial class AlienAttackController : MonoBehaviour
 
 		return closestObj;
 	}
+	*/
 		
+	/*
+	for (int t = 0; t < objectPoolSize; t++) {
+
+		GameObject _sfObj = Instantiate (Resources.Load ("Prefabs/SuperSpriteObject", typeof(GameObject))) as GameObject;
+
+		if (_sfObj != null) {
+
+			if (AlienAttackObjectContainer != null) {
+				_sfObj.transform.parent = AlienAttackObjectContainer.transform;
+			}
+			_sfObj.name = "attackObj" + t.ToString ();
+
+			//float spacePosX = (float)UnityEngine.Random.Range (-mFieldVariables.spaceDeltaX, mFieldVariables.spaceDeltaX);
+			//float spacePosY = (float)UnityEngine.Random.Range (-mFieldVariables.spaceDeltaY, mFieldVariables.spaceDeltaY);
+
+			_sfObj.transform.position = new Vector2 (StoragePoint.transform.position.x, StoragePoint.transform.position.y);
+
+
+			AlienAttackObject objectScript = _sfObj.GetComponent<AlienAttackObject> ();
+			objectScript.ID = t;
+			objectScript.velocity = 100f;
+			objectScript.SetBaseSpriteScale (0.25f, 0.25f);
+
+
+			AlienAttackObjectList.Add (_sfObj);
+
+		} else {
+
+			Debug.Log ("Couldn't load attack sprite prefab");
+		}
+
+
+	}
+	*/
+
+	/*
+	[System.Serializable]
+	public class FieldVariables
+	{
+		public float separationSphereRadiusSquared = 8f;
+
+		public int numSprites = 32;
+		public float spaceDeltaX = 32f;
+		public float spaceDeltaY= 32f;
+	}
+	public FieldVariables mFieldVariables;
+	*/
+
+
 
 }
 
