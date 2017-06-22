@@ -30,9 +30,9 @@ public class AlienAttackObject : MonoBehaviour
 	public eState _State = eState.NoOp;
 
 
-	private GameObject primarySprite = null;
-	private GameObject secondarySprite = null;
-	private GameObject tertiarySprite = null;
+	public GameObject primarySprite = null;
+	public GameObject secondarySprite = null;
+	public GameObject tertiarySprite = null;
 
 	private Vector3 startingPosition;
 
@@ -100,6 +100,19 @@ public class AlienAttackObject : MonoBehaviour
 	public void Reset() 
 	{
 		transform.localPosition = _storagePosition;
+	}
+
+	public void SetPrimarySprite(Sprite _sprite) 
+	{
+		primarySprite.GetComponent<SpriteRenderer>().sprite = _sprite;
+	}
+	public void SetSecondarySprite(Sprite _sprite) 
+	{
+		secondarySprite.GetComponent<SpriteRenderer>().sprite = _sprite;
+	}
+	public void SetTertiarySprite(Sprite _sprite) 
+	{
+		tertiarySprite.GetComponent<SpriteRenderer>().sprite = _sprite;
 	}
 
 	public void SetBaseSpriteScale(float sx, float sy) 

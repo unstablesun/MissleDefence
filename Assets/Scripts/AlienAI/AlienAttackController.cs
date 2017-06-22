@@ -65,7 +65,11 @@ public partial class AlienAttackController : MonoBehaviour
 			string alienPrefabName = me.PrefabName;
 			WayPointList startingPoints = me.StartingPoints;
 
+			GameObject _moduleDataObj = Instantiate (Resources.Load ("Prefabs/AlienModuleData/" + alienPrefabName, typeof(GameObject))) as GameObject;
+			AlienModuleContainer amc = _moduleDataObj.GetComponent<AlienModuleContainer> ();
+			AlienModuleData amd = amc.mData;
 
+			//amd.PrimarySprite
 
 			for (int i = 0; i < numToLoad; i++) {
 
@@ -88,6 +92,9 @@ public partial class AlienAttackController : MonoBehaviour
 					Vector3 vec = startingPoints.GetVector3AtIndex (i);
 					Debug.Log("vec = " + vec.x.ToString() + " "  + vec.y.ToString() + " " + vec.z.ToString());
 
+
+					AlienAttackObject objectScript = _aaObj.GetComponent<AlienAttackObject> ();
+					objectScript.SetPrimarySprite (amd.PrimarySprite);
 
 					AlienAttackObjectList.Add (_aaObj);
 
