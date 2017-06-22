@@ -14,6 +14,9 @@ public class WayPointList : MonoBehaviour
 	public int NumPointsUsed = 0;
 
 	[SerializeField]
+	public bool HasData = false;
+
+	[SerializeField]
 	public Vector3[] mWayPointList = null;
 
 	[SerializeField]
@@ -37,15 +40,29 @@ public class WayPointList : MonoBehaviour
 		return( mWayPointList[index] );            
 	}
 
-	public void AddWayPoint(WayPoint wp, int index)
+	public void AddWayPointData(WayPoint wp, int index)
 	{
 		mWayPointData[index] = wp;            
 	}
 
-	public WayPoint GetWayPointAtIndex(int index)
+	public WayPoint GetWayPointDataAtIndex(int index)
 	{
 		return( mWayPointData[index] );            
 	}
+
+
+
+	public void AddOffsetToPointList(Vector3 vecAdd)
+	{
+		for (int i = 0; i < NumPointsUsed; i++) {
+
+			Vector3 vecOld = mWayPointList [i];
+
+			Vector3 vecNew = vecOld + vecAdd;
+			mWayPointList [i] = new Vector3 (vecNew.x, vecNew.y, vecNew.z);
+		}
+	}
+
 
 
 }

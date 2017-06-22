@@ -28,6 +28,9 @@ public class WayPointManager : MonoBehaviour
 	public int NumPointsUsed = 0;
 
 	[SerializeField]
+	public bool HasData = false;
+
+	[SerializeField]
 	public int MaxPoints = 16;
 
 	[SerializeField]
@@ -60,13 +63,16 @@ public class WayPointManager : MonoBehaviour
 		//int length = WayPointManager.Instance.mWayPointEditList.GetLength (0);
 		int length = NumPointsUsed;
 		scriptRef.InitList (length);
+		scriptRef.HasData = HasData;
 		for (int i = 0; i < length; i++) {
 
 			Vector3 vec = WayPointManager.Instance.mWayPointEditList [i].transform.position;
 			scriptRef.AddVector3 (vec, i);
 
-			WayPoint wp = WayPointManager.Instance.mWayPointEditStructs [i];
-			scriptRef.AddWayPoint (wp, i);
+			if (HasData == true) {
+				WayPoint wp = WayPointManager.Instance.mWayPointEditStructs [i];
+				scriptRef.AddWayPointData (wp, i);
+			}
 
 		}
 		scriptRef.PrefabName = PrefabName;
@@ -110,9 +116,11 @@ public class WayPointManager : MonoBehaviour
 		WayPointManager wpManager = WayPointManagerObject.GetComponent<WayPointManager> ();
 		string  pName = wpManager.PrefabName;
 		int numPoints = wpList.NumPointsUsed;
+		bool HasData = wpList.HasData;
 
 		wpManager.PrefabName = wpList.PrefabName;
 		wpManager.NumPointsUsed = wpList.NumPointsUsed;
+		wpManager.HasData = wpList.HasData;
 
 		Debug.Log ("EditSelectedWayPoint : numPoints = " + numPoints);
 		for (int i = 0; i < numPoints; i++) {
@@ -120,8 +128,10 @@ public class WayPointManager : MonoBehaviour
 			Vector3 vec = wpList.GetVector3AtIndex (i);
 			WayPointManager.Instance.mWayPointEditList [i].transform.position = new Vector3(vec.x, vec.y, vec.z);
 
-			WayPoint wp = wpList.GetWayPointAtIndex (i);
-			WayPointManager.Instance.mWayPointEditStructs [i] = wp;
+			if (HasData == true) {
+				WayPoint wp = wpList.GetWayPointDataAtIndex (i);
+				WayPointManager.Instance.mWayPointEditStructs [i] = wp;
+			}
 
 		}
 			
