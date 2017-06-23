@@ -21,6 +21,7 @@ public class AlienAttackObject : MonoBehaviour
 	{
 		NoOp,
 		Ready,
+		GetWayPoint,
 		CalculatePath,
 		WaitAtPoint,
 		MoveToPoint,
@@ -138,7 +139,7 @@ public class AlienAttackObject : MonoBehaviour
 		mOnEndPoint = false;
 
 
-		_State = eState.CalculatePath;
+		_State = eState.GetWayPoint;
 
 
 	}
@@ -227,9 +228,15 @@ public class AlienAttackObject : MonoBehaviour
 			Reset ();
 			break;
 
-		case eState.CalculatePath:
+
+		case eState.GetWayPoint:
 			{
 				GetWayPointData ();
+			}
+			break;
+
+		case eState.CalculatePath:
+			{
 				CalculateFlightPath ();
 			}
 			break;
@@ -305,7 +312,7 @@ public class AlienAttackObject : MonoBehaviour
 	{
 		int wpIndex = mCurrentWayPoint;
 
-		mWayPointList = mModuleData.WayPointList;
+		//mWayPointList = mModuleData.WayPointList;
 
 		_startPosition = mWayPointList.GetVector3AtIndex (wpIndex);
 
@@ -335,6 +342,9 @@ public class AlienAttackObject : MonoBehaviour
 		_elaspedWaitTime = 0f;
 
 		mCurrentWayPoint++;
+
+		_State = eState.CalculatePath;
+
 	}
 
 
