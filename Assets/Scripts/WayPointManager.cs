@@ -41,7 +41,7 @@ public class WayPointManager : MonoBehaviour
 
 
 	//This must be called at runtime
-	[MenuItem("WayPoints/Save WayPoint Prefab")]
+	[MenuItem("WayPoints/Save WayPoint Prefab (Runtime)")]
 	private static void SaveWayPointPrefab()
 	{
 		if(WayPointManager.Instance != null) {
@@ -85,7 +85,7 @@ public class WayPointManager : MonoBehaviour
 
 
 	//This can be called when editing
-	[MenuItem("WayPoints/Load WayPoint Prefabs")]
+	[MenuItem("WayPoints/Load WayPoint Prefabs (Editor)")]
 	private static void LoadWayPointPrefabs () 
 	{
 
@@ -100,7 +100,7 @@ public class WayPointManager : MonoBehaviour
 	}
 
 	//This must be called at runtime
-	[MenuItem("WayPoints/Edit Selected WayPoint")]
+	[MenuItem("WayPoints/Edit Selected WayPoint (Runtime)")]
 	private static void EditSelectedWayPoint () 
 	{
 

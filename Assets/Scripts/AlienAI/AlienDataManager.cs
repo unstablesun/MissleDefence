@@ -24,7 +24,7 @@ public class AlienDataManager : MonoBehaviour
 	//{}
 
 
-	[MenuItem("AlienData/Save Module Data")]
+	[MenuItem("AlienData/Save Module Data (Runtime)")]
 	private static void SaveWayPointPrefab()
 	{
 		if(AlienDataManager.Instance != null) {

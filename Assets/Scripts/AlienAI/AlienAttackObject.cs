@@ -34,7 +34,7 @@ public class AlienAttackObject : MonoBehaviour
 	public GameObject secondarySprite = null;
 	public GameObject tertiarySprite = null;
 
-	private Vector3 startingPosition;
+	//private Vector3 startingPosition;
 
 	private int _id = 0;
 	public int ID {
@@ -95,12 +95,29 @@ public class AlienAttackObject : MonoBehaviour
 
 	void Start() 
 	{
-		startingPosition = _storagePosition;
+		//startingPosition = _storagePosition;
 	}
 	public void Reset() 
 	{
 		transform.localPosition = _storagePosition;
 	}
+
+	public void AttachModuleData(AlienModuleData amd) 
+	{
+		if (mModuleData == null) {
+			mModuleData = new AlienModuleData ();
+		}
+
+		mModuleData = amd;
+	}
+
+	public void FixUp()
+	{
+		SetPrimarySprite (mModuleData.PrimarySprite);
+
+	}
+
+
 
 	public void SetPrimarySprite(Sprite _sprite) 
 	{

@@ -73,8 +73,6 @@ public partial class AlienAttackController : MonoBehaviour
 
 			for (int i = 0; i < numToLoad; i++) {
 
-				//TODO need to load a AlienAttackObject first, then load the module data and attach it
-
 				GameObject _aaObj = Instantiate (Resources.Load ("Prefabs/AlienAttackObject", typeof(GameObject))) as GameObject;
 
 				if (_aaObj != null) {
@@ -94,7 +92,14 @@ public partial class AlienAttackController : MonoBehaviour
 
 
 					AlienAttackObject objectScript = _aaObj.GetComponent<AlienAttackObject> ();
-					objectScript.SetPrimarySprite (amd.PrimarySprite);
+					objectScript.StoragePosition = StoragePoint.transform.position;
+
+					objectScript.AttachModuleData (amd);
+
+					objectScript.FixUp ();
+
+					//temp
+					objectScript.SetBaseSpriteScale (0.2f, 0.2f);
 
 					AlienAttackObjectList.Add (_aaObj);
 

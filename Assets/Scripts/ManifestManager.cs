@@ -32,7 +32,7 @@ public class ManifestManager : MonoBehaviour
 
 
 	//This must be called at runtime
-	[MenuItem("Manifest/Save ManifestList Prefab")]
+	[MenuItem("Manifest/Save ManifestList Prefab (Runtime)")]
 	private static void SaveManifestListPrefab()
 	{
 		if(ManifestManager.Instance != null) {
@@ -70,7 +70,7 @@ public class ManifestManager : MonoBehaviour
 
 
 	//This can be called when editing
-	[MenuItem("Manifest/Load ManifestList Prefabs")]
+	[MenuItem("Manifest/Load ManifestList Prefabs (Editor)")]
 	private static void LoadManifestListPrefabs () 
 	{
 
@@ -85,7 +85,7 @@ public class ManifestManager : MonoBehaviour
 	}
 
 	//This must be called at runtime
-	[MenuItem("Manifest/Edit Selected ManifestList")]
+	[MenuItem("Manifest/Edit Selected ManifestList (Runtime)")]
 	private static void EditSelectedManifestList () 
 	{
 
