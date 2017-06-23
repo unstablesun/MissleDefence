@@ -22,8 +22,10 @@ public class AlienAttackObject : MonoBehaviour
 		NoOp,
 		Ready,
 		CalculatePath,
+		WaitAtPoint,
 		MoveToPoint,
 		ReachedPoint,
+		OnEndPoint,
 		EndMove,
 		Dead
 	};
@@ -76,6 +78,11 @@ public class AlienAttackObject : MonoBehaviour
 	}
 
 	private WayPointList mWayPointList = null;
+	private int mCurrentWayPoint = 0;
+	private int mMaxWayPointCount;
+	private bool mOnEndPoint;
+
+
 	private ColorSet mColorSet = null;
 
 
@@ -87,6 +94,21 @@ public class AlienAttackObject : MonoBehaviour
 	private Vector3 _direction;
 	private Vector3 _currentPosition;
 	private float _fightMagnitude;
+
+
+
+
+	private float _waitTime = 0f;
+	private float _acceleration = 0f;
+	private float _decelAtPercentOfMag = 0f;
+	private float _decelaration = 0f;
+	private float _minVelocity = 0f;
+	private float _chanceToReverse = 0f;
+	private float _chanceToSkip = 0f;
+
+
+	private float _elaspedWaitTime = 0f;
+
 
 	//private float _elaspedTime = 0f;
 
@@ -111,6 +133,14 @@ public class AlienAttackObject : MonoBehaviour
 
 		//transform.localPosition = _startPosition;
 
+
+		mCurrentWayPoint = 0;
+		mOnEndPoint = false;
+
+
+		_State = eState.CalculatePath;
+
+
 	}
 
 	public void AttachModuleData(AlienModuleData amd) 
@@ -126,19 +156,17 @@ public class AlienAttackObject : MonoBehaviour
 	{
 		SetPrimarySprite (mModuleData.PrimarySprite);
 
+
+		//----------------------Way Points---------------------------
 		if (mWayPointList == null) {
 			mWayPointList = new WayPointList ();
 		}
-
-		if (mColorSet == null) {
-			mColorSet = new ColorSet ();
-		}
-
-
+			
 		mWayPointList = mModuleData.WayPointList;
 
+		mMaxWayPointCount = mWayPointList.NumPointsUsed;
 
-		mWayPointList.DebugPrintList ("####  BEFORE  ####");
+		//mWayPointList.DebugPrintList ("####  BEFORE  ####");
 
 		Vector3 startingWayPoint = mWayPointList.GetVector3AtIndex (0);
 		Vector3 startingOffset = _startPosition - startingWayPoint;
@@ -150,11 +178,15 @@ public class AlienAttackObject : MonoBehaviour
 		startingOffset.z = 0f;
 		mWayPointList.AddOffsetToPointList (startingOffset);
 
+		//mWayPointList.DebugPrintList ("####  AFTER  ####");
 
-		mWayPointList.DebugPrintList ("####  AFTER  ####");
 
 
-		//int numPoints = mWayPointList.NumPointsUsed;
+
+		//------------------------Color-----------------------
+		if (mColorSet == null) {
+			mColorSet = new ColorSet ();
+		}
 
 		mColorSet = mModuleData.ColorSet;
 		SetPrimarySpriteColor (mColorSet.PrimaryColour);
@@ -190,13 +222,21 @@ public class AlienAttackObject : MonoBehaviour
 
 		case eState.NoOp:
 			break;
+
 		case eState.Ready:
 			Reset ();
 			break;
 
 		case eState.CalculatePath:
 			{
+				GetWayPointData ();
 				CalculateFlightPath ();
+			}
+			break;
+
+		case eState.WaitAtPoint:
+			{
+				WaitingAtPoint ();
 			}
 			break;
 
@@ -208,7 +248,12 @@ public class AlienAttackObject : MonoBehaviour
 
 		case eState.ReachedPoint:
 			{
-				FindNextWayPoint ();
+				GetWayPointData ();
+			}
+			break;
+
+		case eState.OnEndPoint:
+			{
 			}
 			break;
 
@@ -234,7 +279,7 @@ public class AlienAttackObject : MonoBehaviour
 		_fightMagnitude = _direction.magnitude;
 		_direction.Normalize ();
 
-		_State = eState.MoveToPoint;
+		_State = eState.WaitAtPoint;
 
 	}
 
@@ -249,16 +294,70 @@ public class AlienAttackObject : MonoBehaviour
 		Vector3 directionVec = _currentPosition - _startPosition;
 		float directionMag = directionVec.magnitude;
 
+		Debug.Log ("directionMag = " + directionMag.ToString() + " _fightMagnitude = " + _fightMagnitude.ToString());
 		if (directionMag > _fightMagnitude) {
 			_State = eState.ReachedPoint;
 		}
 	}
 
 
-	private void FindNextWayPoint()
+	private void GetWayPointData()
 	{
+		int wpIndex = mCurrentWayPoint;
+
+		mWayPointList = mModuleData.WayPointList;
+
+		_startPosition = mWayPointList.GetVector3AtIndex (wpIndex);
+
+		if (wpIndex < mMaxWayPointCount - 1) {
 		
+			_destinationPosition = mWayPointList.GetVector3AtIndex (wpIndex + 1);
+
+		} else {
+
+			//arrived at end point
+			mOnEndPoint = true;
+		}
+			
+		WayPoint wp = mWayPointList.GetWayPointDataAtIndex (wpIndex);
+		_waitTime = wp.WaitTime;
+
+		//_velocity = wp.Velocity;
+		_velocity = 1f;
+
+		_acceleration = wp.Acceleration;
+		_decelAtPercentOfMag = wp.DecelAtPercentOfMag;
+		_decelaration = wp.Decelaration;
+		_minVelocity = wp.MinVelocity;
+		_chanceToReverse = wp.ChanceToReverse;
+		_chanceToSkip = wp.ChanceToSkip;
+
+		_elaspedWaitTime = 0f;
+
+		mCurrentWayPoint++;
 	}
+
+
+	private void WaitingAtPoint()
+	{
+		_elaspedWaitTime += Time.deltaTime;
+		if (_elaspedWaitTime >= _waitTime) {
+			_elaspedWaitTime = 0;
+
+			if (mOnEndPoint == true) {
+				_State = eState.OnEndPoint;
+			} else {
+				_State = eState.MoveToPoint;
+			}
+
+		} else {
+			
+			//do other things
+
+		}
+	}
+
+	
 
 
 
