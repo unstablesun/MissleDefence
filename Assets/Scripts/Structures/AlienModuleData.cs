@@ -28,11 +28,11 @@ public class AlienModuleData
 	[SerializeField]
 	private Sprite mPrimarySprite = null;
 	[SerializeField]
-	private GameObject mSecondarySprite = null;
+	private Sprite mSecondarySprite = null;
 	[SerializeField]
-	private GameObject mTertiarySprite = null;
+	private Sprite mTertiarySprite = null;
 	[SerializeField]
-	public GameObject _wayPointList;
+	public WayPointList _wayPointList;
 	[SerializeField]
 	public ColorSet _colorSet;
 
@@ -66,19 +66,19 @@ public class AlienModuleData
 		set { mPrimarySprite = value; }
 	}
 
-	public GameObject SecondarySprite
+	public Sprite SecondarySprite
 	{
 		get { return mSecondarySprite; }
 		set { mSecondarySprite = value; }
 	}
 
-	public GameObject TertiarySprite
+	public Sprite TertiarySprite
 	{
 		get { return mTertiarySprite; }
 		set { mTertiarySprite = value; }
 	}
 
-	public GameObject WayPointList
+	public WayPointList WayPointList
 	{
 		get { return _wayPointList; }
 		set { _wayPointList = value; }

@@ -75,6 +75,9 @@ public class AlienAttackObject : MonoBehaviour
 		set { mModuleData = value; }
 	}
 
+	private WayPointList mWayPointList = null;
+	private ColorSet mColorSet = null;
+
 
 	float mRed = 128f;
 	float mGreen = 128f;
@@ -96,10 +99,18 @@ public class AlienAttackObject : MonoBehaviour
 	void Start() 
 	{
 		//startingPosition = _storagePosition;
+		transform.localPosition = _startPosition;
+
 	}
 	public void Reset() 
 	{
-		transform.localPosition = _storagePosition;
+		//transform.localPosition = _storagePosition;
+
+		Vector3 testWayPoint = mWayPointList.GetVector3AtIndex (1);
+		transform.localPosition = testWayPoint;
+
+		//transform.localPosition = _startPosition;
+
 	}
 
 	public void AttachModuleData(AlienModuleData amd) 
@@ -114,6 +125,39 @@ public class AlienAttackObject : MonoBehaviour
 	public void FixUp()
 	{
 		SetPrimarySprite (mModuleData.PrimarySprite);
+
+		if (mWayPointList == null) {
+			mWayPointList = new WayPointList ();
+		}
+
+		if (mColorSet == null) {
+			mColorSet = new ColorSet ();
+		}
+
+
+		mWayPointList = mModuleData.WayPointList;
+
+
+		mWayPointList.DebugPrintList ("####  BEFORE  ####");
+
+		Vector3 startingWayPoint = mWayPointList.GetVector3AtIndex (0);
+		Vector3 startingOffset = _startPosition - startingWayPoint;
+
+		//debug
+		//startingOffset.x = -2f;
+		//startingOffset.y = -2f;
+
+		startingOffset.z = 0f;
+		mWayPointList.AddOffsetToPointList (startingOffset);
+
+
+		mWayPointList.DebugPrintList ("####  AFTER  ####");
+
+
+		//int numPoints = mWayPointList.NumPointsUsed;
+
+		mColorSet = mModuleData.ColorSet;
+		SetPrimarySpriteColor (mColorSet.PrimaryColour);
 
 	}
 
@@ -145,6 +189,7 @@ public class AlienAttackObject : MonoBehaviour
 		{
 
 		case eState.NoOp:
+			break;
 		case eState.Ready:
 			Reset ();
 			break;
@@ -234,7 +279,7 @@ public class AlienAttackObject : MonoBehaviour
 	 * --------------------------------------------------------
 	*/
 
-	public void SetRandomObjectColor(int type) 
+	public void SetRandomPrimarySpriteColor(int type) 
 	{
 		if (primarySprite != null) {
 			mRed = (float)Random.Range (0f, 255f);
@@ -244,7 +289,7 @@ public class AlienAttackObject : MonoBehaviour
 		}
 	}
 
-	public void SetObjectColor(float red, float green, float blue, float alpha) 
+	public void SetPrimarySpriteColor(float red, float green, float blue, float alpha) 
 	{
 		if (primarySprite != null) {
 			mRed = red;
@@ -255,6 +300,12 @@ public class AlienAttackObject : MonoBehaviour
 		}
 	}		
 
+	public void SetPrimarySpriteColor(Color32 c32) 
+	{
+		if (primarySprite != null) {
+			primarySprite.GetComponent<Renderer> ().material.color = c32;
+		}
+	}		
 
 
 

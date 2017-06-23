@@ -21,9 +21,6 @@ public partial class AlienAttackController : MonoBehaviour
 
 	private GameObject AlienAttackObjectContainer;
 
-	//private const int objectPoolSize = 64;
-
-
 	public static AlienAttackController Instance;
 
 	void Awake () 
@@ -69,14 +66,11 @@ public partial class AlienAttackController : MonoBehaviour
 			AlienModuleContainer amc = _moduleDataObj.GetComponent<AlienModuleContainer> ();
 			AlienModuleData amd = amc.mData;
 
-			//amd.PrimarySprite
-
 			for (int i = 0; i < numToLoad; i++) {
 
 				GameObject _aaObj = Instantiate (Resources.Load ("Prefabs/AlienAttackObject", typeof(GameObject))) as GameObject;
 
 				if (_aaObj != null) {
-
 
 					if (AlienAttackObjectContainer != null) {
 						_aaObj.transform.parent = AlienAttackObjectContainer.transform;
@@ -84,22 +78,17 @@ public partial class AlienAttackController : MonoBehaviour
 					_aaObj.name = "attackObj" + runningIndex.ToString ();
 
 
-					_aaObj.transform.position = new Vector2 (StoragePoint.transform.position.x, StoragePoint.transform.position.y);
-
-
-					Vector3 vec = startingPoints.GetVector3AtIndex (i);
-					Debug.Log("vec = " + vec.x.ToString() + " "  + vec.y.ToString() + " " + vec.z.ToString());
-
+					Vector3 startingVec = startingPoints.GetVector3AtIndex (i);
+					//Debug.Log("vec = " + startingVec.x.ToString() + " "  + startingVec.y.ToString() + " " + startingVec.z.ToString());
 
 					AlienAttackObject objectScript = _aaObj.GetComponent<AlienAttackObject> ();
 					objectScript.StoragePosition = StoragePoint.transform.position;
-
+					objectScript.StartPosition = startingVec;
 					objectScript.AttachModuleData (amd);
-
 					objectScript.FixUp ();
 
-					//temp
-					objectScript.SetBaseSpriteScale (0.2f, 0.2f);
+					//temp test
+					objectScript.SetBaseSpriteScale (0.3f, 0.3f);
 
 					AlienAttackObjectList.Add (_aaObj);
 

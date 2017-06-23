@@ -63,6 +63,17 @@ public class WayPointList : MonoBehaviour
 		}
 	}
 
+	public void DebugPrintList(string label)
+	{
+		Debug.Log ("...");
+		Debug.Log (label);
+		for (int i = 0; i < NumPointsUsed; i++) {
+
+			Vector3 vec = mWayPointList [i];
+			Debug.Log("vec #" + i.ToString() + "                         X = " + vec.x.ToString() + "    Y = "  + vec.y.ToString());
+
+		}
+	}
 
 
 }
