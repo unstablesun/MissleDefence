@@ -82,6 +82,7 @@ public class AlienAttackObject : MonoBehaviour
 	private int mCurrentWayPoint = 0;
 	private int mMaxWayPointCount;
 	private bool mOnEndPoint;
+	private Vector3 WayPointOffset;
 
 
 	private ColorSet mColorSet = null;
@@ -170,14 +171,14 @@ public class AlienAttackObject : MonoBehaviour
 		//mWayPointList.DebugPrintList ("####  BEFORE  ####");
 
 		Vector3 startingWayPoint = mWayPointList.GetVector3AtIndex (0);
-		Vector3 startingOffset = _startPosition - startingWayPoint;
+		WayPointOffset = _startPosition - startingWayPoint;
 
 		//debug
 		//startingOffset.x = -2f;
 		//startingOffset.y = -2f;
 
-		startingOffset.z = 0f;
-		mWayPointList.AddOffsetToPointList (startingOffset);
+		//startingOffset.z = 0f;
+		//mWayPointList.AddOffsetToPointList (startingOffset);
 
 		//mWayPointList.DebugPrintList ("####  AFTER  ####");
 
@@ -316,9 +317,12 @@ public class AlienAttackObject : MonoBehaviour
 
 		_startPosition = mWayPointList.GetVector3AtIndex (wpIndex);
 
+		_startPosition += WayPointOffset;
+
 		if (wpIndex < mMaxWayPointCount - 1) {
 		
 			_destinationPosition = mWayPointList.GetVector3AtIndex (wpIndex + 1);
+			_destinationPosition += WayPointOffset;
 
 		} else {
 
