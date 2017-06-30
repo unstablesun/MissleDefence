@@ -6,8 +6,12 @@ using UnityEditor;
 public class ProgramListEditor : Editor 
 {
 
+
+	private SerializedObject m_object;
+
 	void OnEnable()
 	{
+		m_object = new SerializedObject(target);
 
 	}
 
@@ -16,6 +20,9 @@ public class ProgramListEditor : Editor
 	public override void OnInspectorGUI()
 	{
 		base.OnInspectorGUI ();
+
+		m_object.Update();
+
 
 		mystyle = new GUIStyle ();
 
@@ -47,6 +54,11 @@ public class ProgramListEditor : Editor
 		GUI.color = Color.white;
 
 
+		var prop = m_object.FindProperty("mColorContainer");
+		EditorGUILayout.PropertyField(prop, true);
+
+
+		m_object.ApplyModifiedProperties();
 
 	}
 

@@ -14,4 +14,7 @@ public class CustomInspectorTest : MonoBehaviour
 	public int Level;
 
 
+	[SerializeField]
+	private ColorSet mColorContainer;
+
 }
