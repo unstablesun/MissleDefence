@@ -2,8 +2,8 @@ using UnityEngine;
 using System.Collections;
 using UnityEditor;
 
-[CustomEditor(typeof(CustomInspectorTest))]
-public class ProgramListEditor : Editor 
+[CustomEditor(typeof(AlienWaveData))]
+public class AlienWaveDataEditor : Editor 
 {
 
 	private SerializedObject m_object;
@@ -18,7 +18,7 @@ public class ProgramListEditor : Editor
 	{
 		m_object = new SerializedObject(target);
 	}
-		
+
 	public override void OnInspectorGUI()
 	{
 		//base.OnInspectorGUI (); //this causes target to draw it's controls as well.  creating dups
@@ -26,7 +26,7 @@ public class ProgramListEditor : Editor
 		mWaveCount = 1;
 		m_object.Update();
 
-		CustomInspectorTest myTarget = (CustomInspectorTest)target;
+		AlienWaveData myTarget = (AlienWaveData)target;
 
 		mystyle = new GUIStyle ();
 
@@ -37,6 +37,9 @@ public class ProgramListEditor : Editor
 
 
 		GUI.color = _scheme.SixthColor;
+
+		var PrefabName = m_object.FindProperty("PrefabName");
+		EditorGUILayout.PropertyField(PrefabName, true);
 
 		myTarget.NumWaves = EditorGUILayout.IntField("Num Waves", myTarget.NumWaves);
 		mNumWaves = myTarget.NumWaves;
@@ -59,12 +62,12 @@ public class ProgramListEditor : Editor
 		GUILayout.Label ("---------------- PROGRAM DATA ----------------", mystyle);
 		GUILayout.Space (10);
 
-		if (GUILayout.Button ("Process Data")) {
+		if (GUILayout.Button ("Process Data & Save Prefab")) {
 			//ProcessData ();
 
 			myTarget.ProcessData ();
 		}
-			
+
 		GUI.color = Color.white;
 
 		for (int w = 1; w < mNumWaves + 1; w++) {
@@ -73,7 +76,7 @@ public class ProgramListEditor : Editor
 			AddNumSquads (mNumSquadsPer);
 
 		}
-			
+
 		m_object.ApplyModifiedProperties();
 
 	}

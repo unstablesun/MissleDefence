@@ -7,21 +7,11 @@ using System;
 
 public class CustomInspectorTest : MonoBehaviour 
 {
-	//container only??
+	public ColorSet ColorScheme;
 
-	/*
-	[SerializeField]
-	public int NumEntriesUsed = 0;
+	public int NumWaves;
 
-	public int Level;
-
-
-	[SerializeField]
-	private ColorSet mColorContainer;
-	*/
-
-	public ColorSet mColorContainer;
-
+	public int NumSquadsPer;
 
 	public ProgramEntry ProgramEntryWave1;
 	public ProgramEntry ProgramEntryWave2;
@@ -41,7 +31,6 @@ public class CustomInspectorTest : MonoBehaviour
 	public ProgramEntry ProgramEntryWave14;
 	public ProgramEntry ProgramEntryWave15;
 
-
 	public ProgramEntry ProgramEntryWave16;
 	public ProgramEntry ProgramEntryWave17;
 	public ProgramEntry ProgramEntryWave18;
@@ -54,19 +43,49 @@ public class CustomInspectorTest : MonoBehaviour
 	public ProgramEntry ProgramEntryWave24;
 	public ProgramEntry ProgramEntryWave25;
 
-	//[HideInInspector]
-	public Vector3 mVectorTest;
+	public ProgramEntry ProgramEntryWave26;
+	public ProgramEntry ProgramEntryWave27;
+	public ProgramEntry ProgramEntryWave28;
+	public ProgramEntry ProgramEntryWave29;
+	public ProgramEntry ProgramEntryWave30;
 
+	public ProgramEntry ProgramEntryWave31;
+	public ProgramEntry ProgramEntryWave32;
+	public ProgramEntry ProgramEntryWave33;
+	public ProgramEntry ProgramEntryWave34;
+	public ProgramEntry ProgramEntryWave35;
+
+	public ProgramEntry ProgramEntryWave36;
+	public ProgramEntry ProgramEntryWave37;
+	public ProgramEntry ProgramEntryWave38;
+	public ProgramEntry ProgramEntryWave39;
+	public ProgramEntry ProgramEntryWave40;
+
+	public ProgramEntry ProgramEntryWave41;
+	public ProgramEntry ProgramEntryWave42;
+	public ProgramEntry ProgramEntryWave43;
+	public ProgramEntry ProgramEntryWave44;
+	public ProgramEntry ProgramEntryWave45;
+
+	public ProgramEntry ProgramEntryWave46;
+	public ProgramEntry ProgramEntryWave47;
+	public ProgramEntry ProgramEntryWave48;
+	public ProgramEntry ProgramEntryWave49;
+	public ProgramEntry ProgramEntryWave50;
 
 	void Awake()
 	{
-
 	}
 
 
-	public void SetTestVector(Vector3 v)
+
+
+	public void ProcessData()
 	{
-		mVectorTest = new Vector3(v.x, v.y, v.z);
+		Debug.Log ("Process Data");
+
+
+
 	}
 
 

@@ -18,6 +18,10 @@ public class ColorSet
 	private Color mQuaternaryColor = Color.black;
 	[SerializeField]
 	private Color mQuinaryColor = Color.white;
+	[SerializeField]
+	private Color mSixthColor = Color.white;
+	[SerializeField]
+	private Color mSeventhColor = Color.white;
 
 	public Color PrimaryColour
 	{
@@ -48,4 +52,17 @@ public class ColorSet
 		get { return mQuinaryColor; }
 		set { mQuinaryColor = value; }
 	}
+		
+	public Color SixthColor
+	{
+		get { return mSixthColor; }
+		set { mSixthColor = value; }
+	}
+
+	public Color SeventhColor
+	{
+		get { return mSeventhColor; }
+		set { mSeventhColor = value; }
+	}
+
 }

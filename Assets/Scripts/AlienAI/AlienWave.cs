@@ -4,16 +4,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
-[System.Serializable]
-public class AlienWave 
+
+public class AlienWave : MonoBehaviour
 {
-	[SerializeField]
-	public string _waveName = "WaveX";
+	public string PrefabName;
+	public int NumWaves;
+	public int NumSquadsPer;
 
-	[SerializeField]
-	public float _launchTime;
 
-	[SerializeField]
-	public GameObject[] _attackArray;
+	public ProgramEntry[] mProgramEntries = null;
+
+	private int mEntryCount = 0;
+
+	void Awake()
+	{
+	}
+
+	void Start()
+	{
+	}
+
+
+	public void InitProgramEntries(int size) 
+	{
+		mProgramEntries = new ProgramEntry[size];
+		mEntryCount = 0;
+	}
+
+	public void AddProgramEntry(ProgramEntry entry) 
+	{
+
+		mProgramEntries [mEntryCount] = entry;
+		ProgramEntry pe = mProgramEntries [mEntryCount];
+		mEntryCount++;
+
+		int size = pe.mLaunchEntry.entry.Length;
+
+		for (int e = 0; e < size; e++) {
+
+			pe.mLaunchEntry.entry [e].startingPointV3 = pe.mLaunchEntry.entry [e].startingPointRaw.transform.position;
+		}
+			
+	}
+
+	public ProgramEntry GetProgramEntryAtIndex(int index)
+	{
+		return( mProgramEntries[index] );            
+	}
 
 }

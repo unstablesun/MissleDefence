@@ -24,11 +24,9 @@ public class ProgramList : MonoBehaviour
 
 	public void InitList(int size)
 	{
-
 		mWaveList = new WaveEntry[size];
 	}
-
-
+		
 	public void AddProgramData(WaveEntry we, int index)
 	{
 		//fix up vectors
@@ -51,23 +49,5 @@ public class ProgramList : MonoBehaviour
 	{
 		return( mWaveList[index] );            
 	}
-
-
-
-	/*
-	public void DebugPrintList(string label)
-	{
-		DebugPrintBuffer.Instance.addToDPrintBuffer ("...");
-		DebugPrintBuffer.Instance.addToDPrintBuffer (label);
-		for (int i = 0; i < NumEntriesUsed; i++) {
-
-			Vector3 vec = mWayPointList [i];
-			string log = "vec #" + i.ToString () + "                         X = " + vec.x.ToString () + "    Y = " + vec.y.ToString ();
-			DebugPrintBuffer.Instance.addToDPrintBuffer (log);
-
-		}
-		DebugPrintBuffer.Instance.flushDPrintBuffer ();
-	}
-	*/
-
+		
 }
