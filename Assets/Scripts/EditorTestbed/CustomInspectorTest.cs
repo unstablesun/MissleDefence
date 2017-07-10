@@ -35,10 +35,33 @@ public class CustomInspectorTest : MonoBehaviour
 	public ProgramEntry ProgramEntryWave9;
 	public ProgramEntry ProgramEntryWave10;
 
+	public ProgramEntry ProgramEntryWave11;
+	public ProgramEntry ProgramEntryWave12;
+	public ProgramEntry ProgramEntryWave13;
+	public ProgramEntry ProgramEntryWave14;
+	public ProgramEntry ProgramEntryWave15;
+
+
+	public ProgramEntry ProgramEntryWave16;
+	public ProgramEntry ProgramEntryWave17;
+	public ProgramEntry ProgramEntryWave18;
+	public ProgramEntry ProgramEntryWave19;
+	public ProgramEntry ProgramEntryWave20;
+
+	public ProgramEntry ProgramEntryWave21;
+	public ProgramEntry ProgramEntryWave22;
+	public ProgramEntry ProgramEntryWave23;
+	public ProgramEntry ProgramEntryWave24;
+	public ProgramEntry ProgramEntryWave25;
+
 	//[HideInInspector]
 	public Vector3 mVectorTest;
 
 
+	void Awake()
+	{
+
+	}
 
 
 	public void SetTestVector(Vector3 v)

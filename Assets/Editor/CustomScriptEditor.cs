@@ -17,11 +17,12 @@ public class ProgramListEditor : Editor
 	}
 
 	public GUIStyle mystyle;
+	int mWaveCount = 1;
 
 	public override void OnInspectorGUI()
 	{
 		//base.OnInspectorGUI (); //this causes type to draw it's controls to.  creating dups
-
+		mWaveCount = 1;
 		m_object.Update();
 
 
@@ -32,6 +33,7 @@ public class ProgramListEditor : Editor
 
 		mystyle.fontStyle = FontStyle.Bold;
 		mystyle.alignment = TextAnchor.MiddleCenter;
+
 
 		GUILayout.Space (10);
 
@@ -69,7 +71,7 @@ public class ProgramListEditor : Editor
 
 
 		//----------------------------------------------------------------------------
-
+		/*
 		mystyle.normal.textColor = new Color(0.15f, 0.15f, 0.15f);
 		mystyle.normal.background = MakeTex(600, 1, new Color(0.2f, 0.6f, 0.4f, 1.0f));
 		GUILayout.Space (5);
@@ -143,7 +145,20 @@ public class ProgramListEditor : Editor
 		GUILayout.Label ("    WAVE 10", mystyle);
 		prop = m_object.FindProperty("ProgramEntryWave10");
 		EditorGUILayout.PropertyField(prop, true);
+		*/
 
+
+		AddHeader(1);
+		AddNumSquads(5);
+
+		AddHeader(2);
+		AddNumSquads(5);
+
+		AddHeader(3);
+		AddNumSquads(5);
+
+		AddHeader(4);
+		AddNumSquads(5);
 
 		m_object.ApplyModifiedProperties();
 
@@ -153,6 +168,37 @@ public class ProgramListEditor : Editor
 	{
 		Debug.Log ("Adding Something");
 	}
+
+	private void AddHeader(int WaveIndex)
+	{
+		mystyle.alignment = TextAnchor.MiddleCenter;
+		mystyle.normal.textColor = new Color(0.15f, 0.15f, 0.15f);
+		mystyle.normal.background = MakeTex(600, 1, new Color(0.2f, 0.6f, 0.4f, 1.0f));
+		GUILayout.Space (5);
+		GUILayout.Label ("WAVE " + WaveIndex.ToString(), mystyle);
+		GUILayout.Space (10);
+
+		mystyle.alignment = TextAnchor.MiddleLeft;
+		mystyle.normal.background = MakeTex(600, 1, new Color(0.2f, 0.2f, 0.2f, 1.0f));
+	}
+
+
+	private void AddNumSquads(int numSquads)
+	{
+		for(int i = 0; i < numSquads; i++) {
+			mystyle.normal.textColor = new Color(0.65f, 1.0f, 0.95f);
+			GUILayout.Label ("    SQUAD " + mWaveCount.ToString(), mystyle);
+			string lookUp = "ProgramEntryWave" + mWaveCount.ToString();
+			var prop = m_object.FindProperty(lookUp);
+			EditorGUILayout.PropertyField(prop, true);
+
+			mWaveCount++;
+		}
+	}
+
+
+
+
 
 
 	private Texture2D MakeTex(int width, int height, Color col)
