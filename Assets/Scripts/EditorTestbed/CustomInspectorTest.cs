@@ -7,11 +7,25 @@ using System;
 
 public class CustomInspectorTest : MonoBehaviour 
 {
+	public enum AttackModule
+	{
+		Drone = 1,
+		Ship = 2
+	};
+
+	public AttackModule eAttackModules = AttackModule.Drone;
+
+
+	public AnimationCurve curveX = AnimationCurve.Linear(0, 0, 10, 10);
+
+
 	public ColorSet ColorScheme;
 
 	public int NumWaves;
 
 	public int NumSquadsPer;
+
+	public float HitPoints;
 
 	public ProgramEntry ProgramEntryWave1;
 	public ProgramEntry ProgramEntryWave2;

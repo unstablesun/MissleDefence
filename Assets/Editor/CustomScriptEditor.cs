@@ -38,6 +38,15 @@ public class ProgramListEditor : Editor
 
 		GUI.color = _scheme.SixthColor;
 
+
+		myTarget.eAttackModules = (CustomInspectorTest.AttackModule)EditorGUILayout.EnumPopup("AttackModule", myTarget.eAttackModules);
+
+		myTarget.HitPoints = EditorGUILayout.Slider (myTarget.HitPoints, 1f, 1000f);
+		Color curveColor = new Color(1.0f, 0.5f, 0.75f);
+		Rect curveRect = new Rect(0, 0, 10, 10);
+		myTarget.curveX = EditorGUILayout.CurveField("Variable X", myTarget.curveX, curveColor, curveRect);
+
+
 		myTarget.NumWaves = EditorGUILayout.IntField("Num Waves", myTarget.NumWaves);
 		mNumWaves = myTarget.NumWaves;
 
