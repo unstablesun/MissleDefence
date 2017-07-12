@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using SWS;
 
 public class AlienAttackObject : MonoBehaviour 
 {
@@ -112,6 +113,9 @@ public class AlienAttackObject : MonoBehaviour
 	private float _elaspedWaitTime = 0f;
 
 
+	private splineMove spline;
+
+
 	//private float _elaspedTime = 0f;
 
 	void Awake()
@@ -122,27 +126,55 @@ public class AlienAttackObject : MonoBehaviour
 
 	void Start() 
 	{
-		//startingPosition = _storagePosition;
-		transform.localPosition = _startPosition;
+		////startingPosition = _storagePosition;
+		//transform.localPosition = _startPosition;
 
+		//Temp
+		Reset ();
 	}
 	public void Reset() 
 	{
-		//transform.localPosition = _storagePosition;
+		////transform.localPosition = _storagePosition;
 
-		Vector3 testWayPoint = mWayPointList.GetVector3AtIndex (1);
-		transform.localPosition = testWayPoint;
+		//Vector3 testWayPoint = mWayPointList.GetVector3AtIndex (1);
+		//transform.localPosition = testWayPoint;
 
-		//transform.localPosition = _startPosition;
-
-
-		mCurrentWayPoint = 0;
-		mOnEndPoint = false;
+		////transform.localPosition = _startPosition;
 
 
-		_State = eState.GetWayPoint;
+		//mCurrentWayPoint = 0;
+		//mOnEndPoint = false;
+
+		spline = GetComponent<splineMove> ();
+
+		float speed = spline.speed;
+		Debug.Log("speed = " + speed);
+
+		spline.StartMove ();
+
+		//spline.Stop ();
+
+		//_State = eState.GetWayPoint;
 
 
+	}
+
+	public void SplinePause() 
+	{ 
+		Debug.Log ("PauseAtWayPoints");
+		spline.Pause (1f);
+	}
+		
+	public void SplineReverse() 
+	{ 
+		Debug.Log ("SplineReverse");
+		spline.Reverse();
+	}
+
+	public void SplineChangeSpeed() 
+	{ 
+		Debug.Log ("SplineChangeSpeed");
+		spline.ChangeSpeed(2);
 	}
 
 	public void AttachModuleData(AlienModuleData amd) 
