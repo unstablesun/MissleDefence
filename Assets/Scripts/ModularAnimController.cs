@@ -1,16 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NextGenSprites;
 
-public class ModularAnimController : MonoBehaviour {
+public class ModularAnimController : MonoBehaviour 
+{
+	public GameObject TargetSprite;
+	public float TargetValue;
+	public ShaderFloat FloatProperty;
 
-	// Use this for initialization
-	void Start () {
-		
+
+	private Material _mat;
+
+	void Start () 
+	{
+		if (TargetSprite != null) {
+
+			_mat = TargetSprite.GetComponent<SpriteRenderer> ().material;
+		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+
+	public void ChangeFloatValue () 
+	{
+
+		_mat.SetFloat (FloatProperty.ToString (), TargetValue);
+
+	}
 		
+	void Update () 
+	{
 	}
 }
