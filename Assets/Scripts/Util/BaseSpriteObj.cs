@@ -28,7 +28,7 @@ public class BaseSpriteObj : PooledObject
 		float offsetx = (float)Random.Range (0f, 8f);
 		float speed = (float)Random.Range (12f, 20f);
 
-		transform.DOMove(new Vector3(24f + offsetx, 0, 0), speed).SetRelative().SetLoops(-1, LoopType.Restart);
+		transform.DOMove(new Vector3(26f + offsetx, 0, 0), speed).SetRelative().SetLoops(-1, LoopType.Restart);
 	}
 
 
