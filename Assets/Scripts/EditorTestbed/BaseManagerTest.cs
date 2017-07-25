@@ -8,6 +8,9 @@ public class BaseManagerTest : MonoBehaviour
 {
 	public EZObjectPool objectPool;
 
+	public GameObject StartPosition;
+	public GameObject EndPosition;
+
 
 	void Awake ()
 	{
