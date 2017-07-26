@@ -29,7 +29,12 @@ public class CloudController : MonoBehaviour
 	[HideInInspector]
 	public float StartAreaY { get; set; }
 
+	[HideInInspector]
+	public bool SystemActive { get; set; }
+
 	private float _elaspedTime;
+
+
 
 	void Awake ()
 	{
@@ -42,6 +47,8 @@ public class CloudController : MonoBehaviour
 
 	void Start () 
 	{
+		SystemActive = true;
+
 		_elaspedTime = 0f;
 
 		Vector3 scale = Vector3.one;
@@ -59,10 +66,13 @@ public class CloudController : MonoBehaviour
 		if (_elaspedTime >= CloudSpawnRate) {
 			_elaspedTime = 0;
 
-			InsertCloud ();
+			if (SystemActive == true) {
+				InsertCloud ();
+			}
 		}
 
 	}
+
 
 	private void InsertCloud () 
 	{
