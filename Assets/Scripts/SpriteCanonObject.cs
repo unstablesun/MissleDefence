@@ -114,9 +114,9 @@ public class SpriteCanonObject : MonoBehaviour
 
 		_fightMagnitude = 0f;
 
-		_xScale = 0.1f;
-		_yScale = 0.1f;
-		_scaleFactor = 1.1f;
+		_xScale = 0.15f;
+		_yScale = 0.15f;
+		_scaleFactor = 3.0f;
 
 		SetBaseSpriteScale (_xScale, _yScale);
 		SetObjectColor (255, 255, 255, 255);
@@ -130,6 +130,41 @@ public class SpriteCanonObject : MonoBehaviour
 		mExplosionBlue = 0f;
 
 	}
+
+
+	public bool CheckCircleCollision(Vector3 vec, float radius)
+	{
+
+		//Debug.Log ("City Check - eVec x = " + vec.x + " y = " + vec.y + " r = " + radius);
+
+		CircleCollider2D cc2d = baseSprite.GetComponent<CircleCollider2D> ();
+
+		if (cc2d != null) {
+
+			Vector3 localVec = transform.position;
+			float localRadius = cc2d.radius;
+
+			Vector3 vec2 = new Vector3 (vec.x, vec.y, 0f);
+			Vector3 localVec2 = new Vector3 (localVec.x, localVec.y, 0f);
+			Vector3 cordVec = vec2 - localVec2;
+			float cord = radius + localRadius;
+			float mag = cordVec.magnitude;
+
+			//Debug.Log ("City Check - cord = " + cord + " mag = " + mag);
+
+			if (cord > mag) {
+
+				//hit something
+				return true;
+			}
+
+		}
+
+		return false;
+
+
+	}
+
 
 	void Update() 
 	{

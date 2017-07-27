@@ -31,7 +31,7 @@ public partial class SpriteCanonController : MonoBehaviour
 				SpriteCanonObject objectScript = _sfObj.GetComponent<SpriteCanonObject> ();
 				objectScript.ID = t;
 				objectScript.velocity = 0f;
-				objectScript.SetBaseSpriteScale (0.1f, 0.1f);
+				objectScript.SetBaseSpriteScale (0.25f, 0.25f);
 
 				SpriteCanonObjectList.Add (_sfObj);
 

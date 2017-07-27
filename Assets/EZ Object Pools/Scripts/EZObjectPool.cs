@@ -20,7 +20,7 @@ namespace EZObjectPools
         /// <summary>
         /// The list of all objects owned by this pool.
         /// </summary>
-        public List<GameObject> ObjectList;
+		public List<GameObject> ObjectList {get; set;}
         /// <summary>
         /// Should this pool automatically resize when empty?
         /// </summary>
@@ -115,7 +115,7 @@ namespace EZObjectPools
 
         #region Instance Functions
 
-        List<GameObject> AvailableObjects;
+		List<GameObject> AvailableObjects;
 
         /// <summary>
         /// Set the properties of the pool.

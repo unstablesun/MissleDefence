@@ -5,6 +5,8 @@ namespace EZObjectPools
     [AddComponentMenu("EZ Object Pools/Pooled Object")]
     public class PooledObject : MonoBehaviour
     {
+		public CircleCollider2D CircleCollider;
+
         /// <summary>
         /// The object pool this object originated from.
         /// </summary>
@@ -28,5 +30,6 @@ namespace EZObjectPools
             else
                 Debug.LogWarning("PooledObject " + gameObject.name + " does not have a parent pool. If this occurred during a scene transition, ignore this. Otherwise reoprt to developer.");
         }
+			
     }
 }

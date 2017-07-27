@@ -79,6 +79,9 @@ public class MeteorController : MonoBehaviour
 			StartArea.SetActive (false);
 			EndArea.SetActive (false);
 		}
+
+		//debug
+		InsertMeteor ();
 	}
 
 	void Update () 
@@ -142,6 +145,12 @@ public class MeteorController : MonoBehaviour
 
 
 	}
+
+	public List<GameObject> GetObjectList()
+	{
+		return objectPool.ObjectList;
+	}
+
 
 }
 

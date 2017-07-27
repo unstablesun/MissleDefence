@@ -29,7 +29,8 @@ public partial class SpriteCanonController : MonoBehaviour
 	}
 	public VelocityVariables mVelocityVariables;
 
-	private List <GameObject> SpriteCanonObjectList = null;
+	[HideInInspector]
+	public List <GameObject> SpriteCanonObjectList = null;
 	private GameObject SpriteCanonObjectContainer;
 
 	public static SpriteCanonController Instance;
@@ -59,6 +60,12 @@ public partial class SpriteCanonController : MonoBehaviour
 
 	//void Update() 
 	//{}
+
+	public List<GameObject> GetObjectList()
+	{
+		return SpriteCanonObjectList;
+	}
+
 
 	public void LaunchProjectile(Vector3 pos, SpriteCanonObject.eType type) 
 	{
