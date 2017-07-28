@@ -218,7 +218,7 @@ public class SpriteCanonObject : MonoBehaviour
 		switch (_Type) {
 
 		case eType.projectile:
-			_velocity = 4.0f;
+			_velocity = 8.0f;
 			break;
 		case eType.clusterBomb:
 			_velocity = 2.75f;
