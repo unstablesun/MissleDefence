@@ -1,15 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using EZObjectPools;
 using DG.Tweening;
-
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Core.PathCore;
 using DG.Tweening.Plugins.Options;
 
-public class GemObject : PooledObject 
+public class GemObject : MonoBehaviour 
 {
+	public enum eState 
+	{
+		NoOp,
+		Loaded,
+		Prepare,
+		Active,
+		Exploding,
+		Dead
+	};
+	public eState _State = eState.NoOp;
+
+	public GameObject gemSprite;
+
+	private int _id = 0;
+	public int ID {
+		get {return _id; } 
+		set {_id = value; }
+	}
+
 
 	void Start () 
 	{
@@ -20,6 +37,12 @@ public class GemObject : PooledObject
 	{
 		
 	}
+
+	public void SetGemSprite (GameObject go) 
+	{
+		gemSprite.GetComponent<SpriteRenderer>().sprite= go.GetComponent<SpriteRenderer>().sprite;
+	}
+		
 
 	public void StartAnim (float endx, float endy, float z, float offsetx, float speed) 
 	{

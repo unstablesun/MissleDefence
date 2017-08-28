@@ -5,8 +5,12 @@ using UnityEngine;
 public class HexManager : MonoBehaviour 
 {
 	public int objectPoolSize = 128;
-	public int HexGridWidth = 8;
-	public int HexGridHeight = 8;
+
+	public float HexGridWidth = 4f;
+	public float HexGridHeight = 4f;
+	public float HexGridDX = 1f;
+	public float HexGridDY = 1f;
+	public float HexSkipDY = 0.5f;
 
 	public GameObject StoragePosition;
 	public GameObject StartGridPosition;
@@ -20,6 +24,18 @@ public class HexManager : MonoBehaviour
 
 	private GameObject _nullObj = null;
 
+	private float gridStartX, gridStartY;
+
+
+	private int _scanType = 0;
+	public int ScanType {
+		get {return _scanType; } 
+		set {_scanType = value; }
+	}
+
+	private int _runningScanIndex;
+
+
 	void Awake () 
 	{
 		Instance = this;
@@ -31,10 +47,17 @@ public class HexManager : MonoBehaviour
 	{
 		HexObjectContainer = GameObject.Find ("HexObjectContainer");
 
+		gridStartX = StartGridPosition.transform.position.x;
+		gridStartY = StartGridPosition.transform.position.y;
+
 		LoadHexObjects ();
+
 		QuerySetObjectsLoaded ();
 
+		QuerySetObjectsPosition();
+
 		QueryLinkHexObjects ();
+
 	}
 
 	
@@ -73,6 +96,7 @@ public class HexManager : MonoBehaviour
 		}
 
 		_nullObj = Instantiate (Resources.Load ("Prefabs/HexObject", typeof(GameObject))) as GameObject;
+		_nullObj.transform.position = new Vector2 (StoragePosition.transform.position.x, StoragePosition.transform.position.y);
 		HexObject nullObjectScript = _nullObj.GetComponent<HexObject> ();
 		nullObjectScript.ID = -1;
 		nullObjectScript.isNullObject = true;
@@ -91,12 +115,60 @@ public class HexManager : MonoBehaviour
 		}
 	}
 
+	void QuerySetObjectsPosition() 
+	{
+		float xOffset = 0f;
+		float yOffset = 0f;
+		int lineCount = 0;
+		int rowCount = 0;
+
+		foreach(GameObject tObj in HexObjectList)
+		{
+			HexObject objectScript = tObj.GetComponent<HexObject> ();
+
+			float x = gridStartX + xOffset;
+			float y = gridStartY + yOffset;
+			if(lineCount % 2 == 1) {
+				y += HexSkipDY;
+			}
+
+			objectScript.SetHexPosition (new Vector3(x,y,1));
+
+
+			if(lineCount == 0 || lineCount == HexGridWidth-1 || rowCount == 0 || rowCount == HexGridHeight-1) {
+				objectScript.SetToNullObject();
+				objectScript.SetObjectColor(128, 128, 128, 200);
+
+				objectScript._Type = HexObject.eType.Edge;
+
+			} else {
+			
+				objectScript._Type = HexObject.eType.Main;
+			}
+				
+			xOffset += HexGridDX;
+			lineCount++;
+			if(lineCount >= HexGridWidth) {
+				lineCount = 0;
+				xOffset = 0f;
+				yOffset += HexGridDY;
+				rowCount++;
+			}
+
+			if(rowCount >= HexGridHeight) {
+				break;
+			}
+		}
+	}
+
+
 	private GameObject QueryFindObjectByID(int id) 
 	{
 		foreach(GameObject tObj in HexObjectList)
 		{
 			HexObject objectScript = tObj.GetComponent<HexObject> ();
-			if (objectScript.ID == id) {
+			if (objectScript.ID == id && objectScript._Type == HexObject.eType.Main) {
+				
 				return tObj;
 			}
 		}
@@ -106,9 +178,9 @@ public class HexManager : MonoBehaviour
 
 	void QueryLinkHexObjects() 
 	{
-		int w = HexGridWidth;
-		int h = HexGridHeight;
-		int max = w * h;
+		float w = HexGridWidth;
+		float h = HexGridHeight;
+		float max = w * h;
 
 		foreach(GameObject tObj in HexObjectList)
 		{
@@ -116,6 +188,7 @@ public class HexManager : MonoBehaviour
 
 			int id = objectScript.ID;
 
+			float _id = (float)id;
 			//surrounding
 			//0 = id - w
 			//1 = id - (w - 1)
@@ -130,62 +203,123 @@ public class HexManager : MonoBehaviour
 			//R side id+1 % w == 0
 			//bot id > (w * h - w)
 
+
+			//Link Main Sequence
 			//0
-			int lookupID = id - w;
-			if (lookupID >= 0 && lookupID < max) {
-				GameObject go = QueryFindObjectByID (lookupID);
-				objectScript.AddLinkedObject (go);
-			} else {
-				objectScript.AddLinkedObject (_nullObj);
+			float lookupID = _id - w;
+			if (lookupID >= 0 && lookupID < max) 
+			{
+				GameObject go = QueryFindObjectByID ((int)lookupID);
+				if(go != null) {
+					objectScript.AddLinkedObject (go);
+				} else {
+					objectScript.AddLinkedObject (_nullObj);
+				}
 			}
 
 			//1
-			lookupID = id - (w - 1);
-			if (lookupID >= 0 && lookupID < max) {
-				GameObject go = QueryFindObjectByID (lookupID);
-				objectScript.AddLinkedObject (go);
-			} else {
-				objectScript.AddLinkedObject (_nullObj);
+			lookupID = _id - (w - 1);
+			if (lookupID >= 0 && lookupID < max) 
+			{
+				GameObject go = QueryFindObjectByID ((int)lookupID);
+				if(go != null) {
+					objectScript.AddLinkedObject (go);
+				} else {
+					objectScript.AddLinkedObject (_nullObj);
+				}
 			}
 
 			//2
-			lookupID = id + 1;
-			if (lookupID >= 0 && lookupID < max) {
-				GameObject go = QueryFindObjectByID (lookupID);
-				objectScript.AddLinkedObject (go);
-			} else {
-				objectScript.AddLinkedObject (_nullObj);
+			lookupID = _id + 1;
+			if (lookupID >= 0 && lookupID < max) 
+			{
+				GameObject go = QueryFindObjectByID ((int)lookupID);
+				if(go != null) {
+					objectScript.AddLinkedObject (go);
+				} else {
+					objectScript.AddLinkedObject (_nullObj);
+				}
 			}
 
 			//3
-			lookupID = id + w;
-			if (lookupID >= 0 && lookupID < max) {
-				GameObject go = QueryFindObjectByID (lookupID);
-				objectScript.AddLinkedObject (go);
-			} else {
-				objectScript.AddLinkedObject (_nullObj);
+			lookupID = _id + w;
+			if (lookupID >= 0 && lookupID < max) 
+			{
+				GameObject go = QueryFindObjectByID ((int)lookupID);
+				if(go != null) {
+					objectScript.AddLinkedObject (go);
+				} else {
+					objectScript.AddLinkedObject (_nullObj);
+				}
 			}
 
 			//4
-			lookupID = id - 1;
-			if (lookupID >= 0 && lookupID < max) {
-				GameObject go = QueryFindObjectByID (lookupID);
-				objectScript.AddLinkedObject (go);
-			} else {
-				objectScript.AddLinkedObject (_nullObj);
+			lookupID = _id - 1;
+			if (lookupID >= 0 && lookupID < max) 
+			{
+				GameObject go = QueryFindObjectByID ((int)lookupID);
+				if(go != null) {
+					objectScript.AddLinkedObject (go);
+				} else {
+					objectScript.AddLinkedObject (_nullObj);
+				}
 			}
 
 			//5
-			lookupID = id - (w + 1);
-			if (lookupID >= 0 && lookupID < max) {
-				GameObject go = QueryFindObjectByID (lookupID);
-				objectScript.AddLinkedObject (go);
-			} else {
-				objectScript.AddLinkedObject (_nullObj);
+			lookupID = _id - (w + 1);
+			if (lookupID >= 0 && lookupID < max) 
+			{
+				GameObject go = QueryFindObjectByID ((int)lookupID);
+				if(go != null) {
+					objectScript.AddLinkedObject (go);
+				} else {
+					objectScript.AddLinkedObject (_nullObj);
+				}
 			}
 
 		}
 	}
+
+
+	public void QueryAttachGemToHex(GameObject go) 
+	{
+		foreach(GameObject tObj in HexObjectList)
+		{
+			HexObject objectScript = tObj.GetComponent<HexObject> ();
+			if (objectScript._Type == HexObject.eType.Main) {
+
+
+
+			}
+		}
+	}
+
+	public void SetScanSetting(int t)
+	{
+		_runningScanIndex = 0;
+	}
+
+	public GameObject QueryScanNextHex() 
+	{
+		int count = HexObjectList.Count;
+		GameObject hexObj = null;
+		while(_runningScanIndex < count)
+		{
+			hexObj = HexObjectList[_runningScanIndex++];
+			if(hexObj != null) {
+				HexObject objectScript = hexObj.GetComponent<HexObject> ();
+				if (objectScript._Type == HexObject.eType.Main) {
+
+					break;
+				}
+			}
+		}
+
+		return hexObj;
+	}
+
+
+
 
 
 }
