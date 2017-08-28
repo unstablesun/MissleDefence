@@ -45,7 +45,12 @@ public class GridLogic : MonoBehaviour
 			break;
 		case eGridState.Diagnostic:
 			
-			FillEmptyDiagnostic();
+			//FillEmptyDiagnostic ();
+
+			FillPreconfigDiagnostic ();
+
+			TryMatchDiagnostic ();
+
 			_State = eGridState.Wait;
 
 			break;
@@ -74,40 +79,89 @@ public class GridLogic : MonoBehaviour
 
 			HexObject objectScript = go.GetComponent<HexObject> ();
 
-			//is empty?
 			if(objectScript.NoGemAttached()) {
 			
-				Debug.Log("NoGemAttached");
-				//get available gem
 				GameObject gem = GemManager.Instance.QueryGetAvailableObject();
-
 
 				if(gem != null) {
 
+					int colorType = (int)Random.Range (0, count);
 
-					int sindex = (int)Random.Range (0, count);
-
-					//select gem type id, example: red gem 
 					GemObject gemScript = gem.GetComponent<GemObject> ();
-					gemScript.SetGemSprite(GemObjectList[sindex]);
+					gemScript.SetGemSprite(GemObjectList[colorType], (GemObject.eColorType) colorType);
 
-
-				
-					Debug.Log("gem != null");
-					//attach to hex
 					objectScript.AttachGem(gem);
 				}
-
-
-
 			}
+				
+			go = HexManager.Instance.QueryScanNextHex();
+		}
+
+	}
 
 
 
+	int[] PreConfigBoard1 = 
+	{ 
+		0, 1, 2, 3, 4, 
+		4, 3, 2, 1, 0, 
+		0, 1, 2, 3, 4, 
+		4, 3, 2, 1, 0, 
+		0, 1, 2, 3, 4 
+	};
+
+	int[] PreConfigBoard2 = 
+	{ 
+		4, 0, 2, 0, 0, 
+		0, 3, 0, 4, 3, 
+		1, 2, 1, 3, 1, 
+		0, 2, 2, 0, 0, 
+		1, 1, 0, 0, 1 
+	};
+
+	private void FillPreconfigDiagnostic () 
+	{
+		int count = GemObjectList.Count;
+
+		Debug.Log("FillEmptyDiagnostic");
+		HexManager.Instance.SetScanSetting(0);
+
+		GameObject go = HexManager.Instance.QueryScanNextHex();
+
+		int index = 0;
+		while(go != null)
+		{
+
+			HexObject objectScript = go.GetComponent<HexObject> ();
+
+			if(objectScript._Type == HexObject.eType.Main && objectScript.NoGemAttached()) {
+
+				GameObject gem = GemManager.Instance.QueryGetAvailableObject();
+
+				if(gem != null) {
+
+					int colorType = PreConfigBoard2[index++];
+
+					GemObject gemScript = gem.GetComponent<GemObject> ();
+					gemScript.SetGemSprite(GemObjectList[colorType], (GemObject.eColorType) colorType);
+
+					objectScript.AttachGem(gem);
+				}
+			}
 
 			go = HexManager.Instance.QueryScanNextHex();
 		}
 
 	}
+
+
+
+	private void TryMatchDiagnostic ()
+	{
+		HexManager.Instance.QueryScanAndMark ();
+
+		HexManager.Instance.QueryShowMarkedHexes ();
+	}
+		
 
 }

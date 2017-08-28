@@ -38,6 +38,10 @@ public class HexObject : MonoBehaviour
 	public GameObject backingSprite;
 	public GameObject tapPadSprite;
 
+	public int Debug_ID_;
+	public int Debug_ScanColor_;
+	public int Debug_MarkedColor_;
+
 	private int _id = 0;
 	public int ID {
 		get {return _id; } 
@@ -48,17 +52,26 @@ public class HexObject : MonoBehaviour
 	public List <GameObject> HexLinkList = null;
 
 	public bool isNullObject = false;
+	public bool isSkipHex = false;
 
 
 	//[HideInInspector]
 	public GameObject GemRef = null;
 
+	private int _scanColor = 0;
+	public int ScanColor {
+		get {return _scanColor; } 
+		set {_scanColor = value; }
+	}
 
+	private int _markedColor = 0;
+	public int MarkedColor {
+		get {return _markedColor; } 
+		set {_markedColor = value; }
+	}
 
 	void Start () 
-	{
-
-	}
+	{}
 
 	public void SetToNullObject () 
 	{
@@ -76,9 +89,7 @@ public class HexObject : MonoBehaviour
 
 	public void AttachGem (GameObject go) 
 	{
-		Debug.Log("AttachGem");
 		GemRef = go;
-
 		GemRef.transform.position = new Vector3( transform.position.x, transform.position.y, -1);
 	}
 
@@ -89,13 +100,22 @@ public class HexObject : MonoBehaviour
 		else
 			return false;
 	}
+
+	public GemObject.eColorType GetGemRefColorType()
+	{
+		if (GemRef != null) {
+			GemObject objectScript = GemRef.GetComponent<GemObject> ();
+			return objectScript.ColorType;
+		}
+
+		return GemObject.eColorType.Black;//not set
+	}
+
 		
 	public void AddLinkedObject(GameObject go)
 	{
-		//Debug.Log ("AddLinkedObject");
 		if (HexLinkList != null) {
 		
-			//Debug.Log ("           Added");
 			HexLinkList.Add (go);
 		}
 	}
@@ -107,7 +127,11 @@ public class HexObject : MonoBehaviour
 	
 	void Update () 
 	{
-		
+		//debug
+		Debug_ID_ = ID;
+		Debug_ScanColor_ = ScanColor;
+		Debug_MarkedColor_ = MarkedColor;
+
 	}
 
 

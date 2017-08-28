@@ -19,6 +19,22 @@ public class GemObject : MonoBehaviour
 	};
 	public eState _State = eState.NoOp;
 
+	//these colors are symbolic and used for matching only
+	public enum eColorType 
+	{
+		Red,
+		Green,
+		Blue,
+		Yellow,
+		Cyan,
+		Purple,
+		Orange,
+		White,
+		Black
+	};
+	public eColorType ColorType = eColorType.White;
+
+
 	public GameObject gemSprite;
 
 	private int _id = 0;
@@ -38,9 +54,11 @@ public class GemObject : MonoBehaviour
 		
 	}
 
-	public void SetGemSprite (GameObject go) 
+	public void SetGemSprite (GameObject go, eColorType ctype) 
 	{
 		gemSprite.GetComponent<SpriteRenderer>().sprite= go.GetComponent<SpriteRenderer>().sprite;
+
+		ColorType = ctype;
 	}
 		
 

@@ -18,6 +18,7 @@ public class HexManager : MonoBehaviour
 
 	[HideInInspector]
 	public List <GameObject> HexObjectList = null;
+
 	private GameObject HexObjectContainer;
 
 	public static HexManager Instance;
@@ -25,6 +26,9 @@ public class HexManager : MonoBehaviour
 	private GameObject _nullObj = null;
 
 	private float gridStartX, gridStartY;
+
+	public List <GameObject> ScannedLinkedList = null;
+
 
 
 	private int _scanType = 0;
@@ -41,6 +45,8 @@ public class HexManager : MonoBehaviour
 		Instance = this;
 
 		HexObjectList = new List<GameObject>();
+
+		ScannedLinkedList = new List<GameObject>();
 	}
 
 	void Start () 
@@ -129,7 +135,10 @@ public class HexManager : MonoBehaviour
 			float x = gridStartX + xOffset;
 			float y = gridStartY + yOffset;
 			if(lineCount % 2 == 1) {
+				
 				y += HexSkipDY;
+
+				objectScript.isSkipHex = true;
 			}
 
 			objectScript.SetHexPosition (new Vector3(x,y,1));
@@ -187,97 +196,94 @@ public class HexManager : MonoBehaviour
 			HexObject objectScript = tObj.GetComponent<HexObject> ();
 
 			int id = objectScript.ID;
+			bool isSkip = objectScript.isSkipHex;
 
 			float _id = (float)id;
-			//surrounding
-			//0 = id - w
-			//1 = id - (w - 1)
-			//2 = id + 1
-			//3 = id + w
-			//4 = id - 1
-			//5 = id - (w + 1)
-
-			//edges
-			//top id < w 
-			//L side id % w == 0
-			//R side id+1 % w == 0
-			//bot id > (w * h - w)
-
 
 			//Link Main Sequence
-			//0
-			float lookupID = _id - w;
-			if (lookupID >= 0 && lookupID < max) 
-			{
-				GameObject go = QueryFindObjectByID ((int)lookupID);
-				if(go != null) {
-					objectScript.AddLinkedObject (go);
-				} else {
-					objectScript.AddLinkedObject (_nullObj);
-				}
-			}
+			if (isSkip) {
+				
+				//0
+				float lookupID = _id - w;
+				if (lookupID >= 0 && lookupID < max)
+					SetLink (lookupID, objectScript);
 
-			//1
-			lookupID = _id - (w - 1);
-			if (lookupID >= 0 && lookupID < max) 
-			{
-				GameObject go = QueryFindObjectByID ((int)lookupID);
-				if(go != null) {
-					objectScript.AddLinkedObject (go);
-				} else {
-					objectScript.AddLinkedObject (_nullObj);
-				}
-			}
+				//1
+				lookupID = _id - (w - 1);
+				if (lookupID >= 0 && lookupID < max)
+					SetLink (lookupID, objectScript);
 
-			//2
-			lookupID = _id + 1;
-			if (lookupID >= 0 && lookupID < max) 
-			{
-				GameObject go = QueryFindObjectByID ((int)lookupID);
-				if(go != null) {
-					objectScript.AddLinkedObject (go);
-				} else {
-					objectScript.AddLinkedObject (_nullObj);
-				}
-			}
+				//2
+				lookupID = _id + 1;
+				if (lookupID >= 0 && lookupID < max)
+					SetLink (lookupID, objectScript);
 
-			//3
-			lookupID = _id + w;
-			if (lookupID >= 0 && lookupID < max) 
-			{
-				GameObject go = QueryFindObjectByID ((int)lookupID);
-				if(go != null) {
-					objectScript.AddLinkedObject (go);
-				} else {
-					objectScript.AddLinkedObject (_nullObj);
-				}
-			}
+				//3
+				lookupID = _id + w;
+				if (lookupID >= 0 && lookupID < max)
+					SetLink (lookupID, objectScript);
 
-			//4
-			lookupID = _id - 1;
-			if (lookupID >= 0 && lookupID < max) 
-			{
-				GameObject go = QueryFindObjectByID ((int)lookupID);
-				if(go != null) {
-					objectScript.AddLinkedObject (go);
-				} else {
-					objectScript.AddLinkedObject (_nullObj);
-				}
-			}
+				//4
+				lookupID = _id - 1;
+				if (lookupID >= 0 && lookupID < max)
+					SetLink (lookupID, objectScript);
 
-			//5
-			lookupID = _id - (w + 1);
-			if (lookupID >= 0 && lookupID < max) 
-			{
-				GameObject go = QueryFindObjectByID ((int)lookupID);
-				if(go != null) {
-					objectScript.AddLinkedObject (go);
-				} else {
-					objectScript.AddLinkedObject (_nullObj);
-				}
+				//5
+				lookupID = _id - (w + 1);
+				if (lookupID >= 0 && lookupID < max)
+					SetLink (lookupID, objectScript);
+				
+			} else {
+			
+				//0
+				float lookupID = _id - w;
+				if (lookupID >= 0 && lookupID < max)
+					SetLink (lookupID, objectScript);
+
+				//1
+				lookupID = _id + 1;
+				if (lookupID >= 0 && lookupID < max)
+					SetLink (lookupID, objectScript);
+
+				//2
+				lookupID = _id + (w + 1);
+				if (lookupID >= 0 && lookupID < max)
+					SetLink (lookupID, objectScript);
+
+				//3
+				lookupID = _id + w;
+				if (lookupID >= 0 && lookupID < max)
+					SetLink (lookupID, objectScript);
+
+				//4
+				lookupID = _id + (w - 1);
+				if (lookupID >= 0 && lookupID < max)
+					SetLink (lookupID, objectScript);
+
+				//5
+				lookupID = _id - 1;
+				if (lookupID >= 0 && lookupID < max)
+					SetLink (lookupID, objectScript);
+				
 			}
 
 		}
+	}
+		
+	private void SetLink(float lookupID, HexObject objectScript)
+	{
+		GameObject go = QueryFindObjectByID ((int)lookupID);
+		if(go != null) {
+			HexObject objScript = go.GetComponent<HexObject> ();
+			if (objScript._Type == HexObject.eType.Main) {
+				objectScript.AddLinkedObject (go);
+			} else {
+				objectScript.AddLinkedObject (_nullObj);
+			}
+		} else {
+			objectScript.AddLinkedObject (_nullObj);
+		}
+
 	}
 
 
@@ -299,6 +305,7 @@ public class HexManager : MonoBehaviour
 		_runningScanIndex = 0;
 	}
 
+	//this scans and returns hexs on the main sequence left to right top to bottom
 	public GameObject QueryScanNextHex() 
 	{
 		int count = HexObjectList.Count;
@@ -318,6 +325,196 @@ public class HexManager : MonoBehaviour
 		return hexObj;
 	}
 
+
+
+
+	//-------------------------------------------------
+	//				Scan for Matches
+	//-------------------------------------------------
+
+	public void QueryClearMarked() 
+	{
+		foreach(GameObject tObj in HexObjectList)
+		{
+			HexObject objectScript = tObj.GetComponent<HexObject> ();
+			if (objectScript._Type == HexObject.eType.Main) {
+				objectScript.MarkedColor = (int)GemObject.eColorType.Black;
+			}
+		}
+	}
+
+	public void QueryClearScan() 
+	{
+		foreach(GameObject tObj in HexObjectList)
+		{
+			HexObject objectScript = tObj.GetComponent<HexObject> ();
+			if (objectScript._Type == HexObject.eType.Main) {
+				objectScript.ScanColor = (int)GemObject.eColorType.Black;
+			}
+		}
+	}
+
+	public void QueryScanToMarked() 
+	{
+		foreach(GameObject tObj in HexObjectList)
+		{
+			HexObject objectScript = tObj.GetComponent<HexObject> ();
+			if (objectScript._Type == HexObject.eType.Main) {
+
+				if (objectScript.MarkedColor == (int)GemObject.eColorType.Black) {
+					objectScript.MarkedColor = objectScript.ScanColor;
+				}
+			}
+		}
+	}
+		
+	public int QueryCountScanColors(int scanColor) 
+	{
+		int count = 0;
+		foreach(GameObject tObj in HexObjectList)
+		{
+			HexObject objectScript = tObj.GetComponent<HexObject> ();
+			if (objectScript._Type == HexObject.eType.Main) {
+				if (objectScript.ScanColor == scanColor) {
+				
+					count++;
+				}
+			}
+		}
+
+		return count;
+	}
+
+
+	public void QueryScanAndMark() 
+	{
+		QueryClearMarked ();
+
+		foreach(GameObject tObj in HexObjectList)
+		{
+			HexObject objectScript = tObj.GetComponent<HexObject> ();
+			if (objectScript._Type == HexObject.eType.Main && objectScript.MarkedColor == (int)GemObject.eColorType.Black) {
+
+				//new target so clear scan colors
+				QueryClearScan ();
+
+				//do link walk
+				GemObject.eColorType colorType = objectScript.GetGemRefColorType ();
+
+				//debug
+				if (colorType == GemObject.eColorType.Blue) {
+					Debug.Log ("Link Walk for Color " + colorType.ToString() + " Object ID = " + objectScript.ID);
+				}
+
+				objectScript.ScanColor = (int)colorType;
+
+				//get link list for this target object
+				List <GameObject> linkList = objectScript.HexLinkList;
+
+				bool eval = EvaluateLinkedList (linkList, colorType);
+
+				if (colorType == GemObject.eColorType.Blue) {
+					Debug.Log ("<<eval = true>> <<ScannedLinkedList Count = " + ScannedLinkedList.Count);
+
+				}
+
+				while (eval == true) {
+
+					if (colorType == GemObject.eColorType.Blue) {
+						Debug.Log ("<<In eval loop>>");
+					}
+
+					List<GameObject> evalList = new List<GameObject>(ScannedLinkedList);
+					ScannedLinkedList.Clear ();
+
+					if (evalList.Count == 0) {
+						eval = false;
+					}
+
+					foreach (GameObject linkObj in evalList) {
+
+						if (colorType == GemObject.eColorType.Blue) {
+							HexObject tempScript = linkObj.GetComponent<HexObject> ();
+							Debug.Log ("    $$$ linkObj ID  = " + tempScript.ID);
+						}
+
+						
+						HexObject objScript = linkObj.GetComponent<HexObject> ();
+
+						List <GameObject> sublinkList = objScript.HexLinkList;
+						eval = EvaluateLinkedList (sublinkList, colorType);
+
+						//not sure if this is needed
+						//if (eval == false) {
+						//	break;
+						//}
+					}
+						
+				}
+
+				int count = QueryCountScanColors ((int)colorType);
+				if (count >= 4) {
+
+					//if >= 5 -> add powerup
+					QueryScanToMarked ();
+
+					Debug.Log ("########### QueryScanToMarked for color " + colorType.ToString() + "  count = " + count);
+
+				}
+			}
+		}
+	}
+
+	private bool EvaluateLinkedList(List <GameObject> linkList, GemObject.eColorType colorType)
+	{
+
+		bool eval = false;
+		foreach (GameObject linkObj in linkList) {
+
+			HexObject objectScript = linkObj.GetComponent<HexObject> ();
+
+			if (objectScript._Type == HexObject.eType.Main) {
+
+				if (objectScript.ScanColor == (int)GemObject.eColorType.Black && objectScript.MarkedColor == (int)GemObject.eColorType.Black) {
+
+					GemObject.eColorType cType = objectScript.GetGemRefColorType ();
+
+					if (cType == colorType) {
+
+						//debug
+						if (colorType == GemObject.eColorType.Blue) {
+							Debug.Log ("......Writing Color " + colorType.ToString() + " Object ID = " + objectScript.ID);
+						}
+
+
+						objectScript.ScanColor = (int)colorType;
+
+						ScannedLinkedList.Add (linkObj);
+
+						eval = true;
+					}
+
+				}
+			}
+		}
+
+		return eval;
+	}
+
+
+	public void QueryShowMarkedHexes() 
+	{
+		foreach(GameObject tObj in HexObjectList)
+		{
+			HexObject objectScript = tObj.GetComponent<HexObject> ();
+			if (objectScript._Type == HexObject.eType.Main) {
+				if (objectScript.MarkedColor != (int)GemObject.eColorType.Black) {
+				
+					objectScript.SetObjectColor (255, 0, 0, 255);
+				}
+			}
+		}
+	}
 
 
 
