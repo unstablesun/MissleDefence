@@ -233,7 +233,7 @@ public class HexManager : MonoBehaviour
 				if (lookupID >= 0 && lookupID < max)
 					SetLink (lookupID, objectScript);
 				
-			} else {
+			} else { //non skip
 			
 				//0
 				float lookupID = _id - w;
@@ -401,12 +401,6 @@ public class HexManager : MonoBehaviour
 
 				//do link walk
 				GemObject.eColorType colorType = objectScript.GetGemRefColorType ();
-
-				//debug
-				if (colorType == GemObject.eColorType.Red) {
-					Debug.Log ("Link Walk for Color " + colorType.ToString() + " Object ID = " + objectScript.ID);
-				}
-
 				objectScript.ScanColor = (int)colorType;
 
 				//get link list for this target object
@@ -414,24 +408,7 @@ public class HexManager : MonoBehaviour
 
 				bool eval = EvaluateLinkedList (linkList, colorType);
 
-				if (colorType == GemObject.eColorType.Red) {
-					Debug.Log ("<<eval = true>> <<ScannedLinkedList Count = " + ScannedLinkedList.Count);
-					foreach(GameObject debugObj in ScannedLinkedList){
-
-						HexObject debugScript = debugObj.GetComponent<HexObject> ();
-
-						Debug.Log ("____________________ScannedLinkedList Obj ID = " + debugScript.ID);
-
-					}
-						
-				}
-
 				while (eval == true) {
-
-					if (colorType == GemObject.eColorType.Red) {
-						Debug.Log ("<<In eval loop>>");
-					}
-
 					List<GameObject> evalList = new List<GameObject>(ScannedLinkedList);
 					ScannedLinkedList.Clear ();
 
@@ -439,24 +416,15 @@ public class HexManager : MonoBehaviour
 						eval = false;
 					}
 
+					bool innerEval = false;
 					foreach (GameObject linkObj in evalList) {
-
-						if (colorType == GemObject.eColorType.Red) {
-							HexObject tempScript = linkObj.GetComponent<HexObject> ();
-							Debug.Log ("    $$$ linkObj ID  = " + tempScript.ID);
-						}
-
-						
 						HexObject objScript = linkObj.GetComponent<HexObject> ();
-
 						List <GameObject> sublinkList = objScript.HexLinkList;
-						eval = EvaluateLinkedList (sublinkList, colorType);
-
-						//not sure if this is needed
-						//if (eval == false) {
-						//	break;
-						//}
+						if(EvaluateLinkedList (sublinkList, colorType)) {
+							innerEval = true;
+						}
 					}
+					eval = innerEval;
 						
 				}
 
@@ -475,7 +443,6 @@ public class HexManager : MonoBehaviour
 
 	private bool EvaluateLinkedList(List <GameObject> linkList, GemObject.eColorType colorType)
 	{
-
 		bool eval = false;
 		foreach (GameObject linkObj in linkList) {
 
@@ -488,17 +455,8 @@ public class HexManager : MonoBehaviour
 					GemObject.eColorType cType = objectScript.GetGemRefColorType ();
 
 					if (cType == colorType) {
-
-						//debug
-						if (colorType == GemObject.eColorType.Red) {
-							Debug.Log ("......Writing Color " + colorType.ToString() + " Object ID = " + objectScript.ID);
-						}
-
-
 						objectScript.ScanColor = (int)colorType;
-
 						ScannedLinkedList.Add (linkObj);
-
 						eval = true;
 					}
 
@@ -523,8 +481,6 @@ public class HexManager : MonoBehaviour
 			}
 		}
 	}
-
-
 
 
 }
