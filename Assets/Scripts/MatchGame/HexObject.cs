@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class HexObject : MonoBehaviour 
 {
@@ -37,6 +38,7 @@ public class HexObject : MonoBehaviour
 
 	public GameObject backingSprite;
 	public GameObject tapPadSprite;
+	public GameObject textObj;
 
 	public int Debug_ID_;
 	public int Debug_ScanColor_;
@@ -124,14 +126,17 @@ public class HexObject : MonoBehaviour
 	{
 		transform.position = new Vector3(vec.x, vec.y, vec.z);
 	}
-	
+
 	void Update () 
 	{
-		//debug
+		//debug--------
 		Debug_ID_ = ID;
 		Debug_ScanColor_ = ScanColor;
 		Debug_MarkedColor_ = MarkedColor;
 
+		TMP_Text m_text = textObj.GetComponent<TextMeshPro>();
+		m_text.text = ID.ToString();
+		//-------------
 	}
 
 

@@ -397,12 +397,13 @@ public class HexManager : MonoBehaviour
 
 				//new target so clear scan colors
 				QueryClearScan ();
+				ScannedLinkedList.Clear ();
 
 				//do link walk
 				GemObject.eColorType colorType = objectScript.GetGemRefColorType ();
 
 				//debug
-				if (colorType == GemObject.eColorType.Blue) {
+				if (colorType == GemObject.eColorType.Red) {
 					Debug.Log ("Link Walk for Color " + colorType.ToString() + " Object ID = " + objectScript.ID);
 				}
 
@@ -413,14 +414,21 @@ public class HexManager : MonoBehaviour
 
 				bool eval = EvaluateLinkedList (linkList, colorType);
 
-				if (colorType == GemObject.eColorType.Blue) {
+				if (colorType == GemObject.eColorType.Red) {
 					Debug.Log ("<<eval = true>> <<ScannedLinkedList Count = " + ScannedLinkedList.Count);
+					foreach(GameObject debugObj in ScannedLinkedList){
 
+						HexObject debugScript = debugObj.GetComponent<HexObject> ();
+
+						Debug.Log ("____________________ScannedLinkedList Obj ID = " + debugScript.ID);
+
+					}
+						
 				}
 
 				while (eval == true) {
 
-					if (colorType == GemObject.eColorType.Blue) {
+					if (colorType == GemObject.eColorType.Red) {
 						Debug.Log ("<<In eval loop>>");
 					}
 
@@ -433,7 +441,7 @@ public class HexManager : MonoBehaviour
 
 					foreach (GameObject linkObj in evalList) {
 
-						if (colorType == GemObject.eColorType.Blue) {
+						if (colorType == GemObject.eColorType.Red) {
 							HexObject tempScript = linkObj.GetComponent<HexObject> ();
 							Debug.Log ("    $$$ linkObj ID  = " + tempScript.ID);
 						}
@@ -482,7 +490,7 @@ public class HexManager : MonoBehaviour
 					if (cType == colorType) {
 
 						//debug
-						if (colorType == GemObject.eColorType.Blue) {
+						if (colorType == GemObject.eColorType.Red) {
 							Debug.Log ("......Writing Color " + colorType.ToString() + " Object ID = " + objectScript.ID);
 						}
 

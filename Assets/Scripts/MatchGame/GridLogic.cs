@@ -119,6 +119,16 @@ public class GridLogic : MonoBehaviour
 		1, 1, 0, 0, 1 
 	};
 
+	int[] PreConfigBoard3 = 
+	{ 
+		1, 0, 0, 0, 0, 
+		2, 0, 0, 0, 0, 
+		2, 1, 2, 3, 4, 
+		4, 3, 3, 1, 0, 
+		0, 1, 2, 3, 4 
+	};
+
+
 	private void FillPreconfigDiagnostic () 
 	{
 		int count = GemObjectList.Count;
@@ -140,7 +150,7 @@ public class GridLogic : MonoBehaviour
 
 				if(gem != null) {
 
-					int colorType = PreConfigBoard2[index++];
+					int colorType = PreConfigBoard3[index++];
 
 					GemObject gemScript = gem.GetComponent<GemObject> ();
 					gemScript.SetGemSprite(GemObjectList[colorType], (GemObject.eColorType) colorType);
