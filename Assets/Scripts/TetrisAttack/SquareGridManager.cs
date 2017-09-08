@@ -423,11 +423,175 @@ public class SquareGridManager : MonoBehaviour
 			if (objectScript._Type == SquareGridObject.eType.Main) {
 				if (objectScript.MarkedColor != (int)GemObject.eColorType.Black) {
 
-					objectScript.SetObjectColor (255, 0, 0, 255);
+					objectScript.SetObjectColor (255, 0, 64, 128);
 				}
 			}
 		}
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public void QueryScanForLinesAndMark() 
+	{
+		QueryClearMarked ();
+
+		//Horizontal
+		foreach(GameObject tObj in SquareGridObjectList)
+		{
+			SquareGridObject objectScript = tObj.GetComponent<SquareGridObject> ();
+			if (objectScript._Type == SquareGridObject.eType.Main && objectScript.MarkedColor == (int)GemObject.eColorType.Black) {
+
+				//new target so clear scan colors
+				QueryClearScan ();
+				ScannedLinkedList.Clear ();
+
+				//do link walk
+				GemObject.eColorType colorType = objectScript.GetGemRefColorType ();
+				objectScript.ScanColor = (int)colorType;
+
+				//get link list for this target object
+				List <GameObject> linkList = objectScript.HexLinkList;
+
+				bool eval = EvaluateLinkedListForIndex (linkList, colorType, 1);
+
+				Debug.Log ("eval == true");
+
+				while (eval == true) {
+					
+					List<GameObject> evalList = new List<GameObject>(ScannedLinkedList);
+					ScannedLinkedList.Clear ();
+
+					if (evalList.Count == 0) {
+						eval = false;
+					}
+
+					bool innerEval = false;
+					GameObject linkObj = evalList [0]; 
+					SquareGridObject objScript = linkObj.GetComponent<SquareGridObject> ();
+					List <GameObject> sublinkList = objScript.HexLinkList;
+					if(EvaluateLinkedListForIndex (sublinkList, colorType, 1)) {
+						innerEval = true;
+					}
+
+					eval = innerEval;
+
+				}
+
+				int count = QueryCountScanColors ((int)colorType);
+				if (count >= 3) {
+
+					//if >= 5 -> add powerup
+					QueryScanToMarked ();
+
+					Debug.Log ("########### QueryScanToMarked for color " + colorType.ToString() + "  count = " + count);
+
+				}
+			}
+		}
+
+		//Vertical
+		foreach(GameObject tObj in SquareGridObjectList)
+		{
+			SquareGridObject objectScript = tObj.GetComponent<SquareGridObject> ();
+			if (objectScript._Type == SquareGridObject.eType.Main && objectScript.MarkedColor == (int)GemObject.eColorType.Black) {
+
+				//new target so clear scan colors
+				QueryClearScan ();
+				ScannedLinkedList.Clear ();
+
+				//do link walk
+				GemObject.eColorType colorType = objectScript.GetGemRefColorType ();
+				objectScript.ScanColor = (int)colorType;
+
+				//get link list for this target object
+				List <GameObject> linkList = objectScript.HexLinkList;
+
+				bool eval = EvaluateLinkedListForIndex (linkList, colorType, 2);
+
+				Debug.Log ("eval == true");
+
+				while (eval == true) {
+
+					List<GameObject> evalList = new List<GameObject>(ScannedLinkedList);
+					ScannedLinkedList.Clear ();
+
+					if (evalList.Count == 0) {
+						eval = false;
+					}
+
+					bool innerEval = false;
+					GameObject linkObj = evalList [0]; 
+					SquareGridObject objScript = linkObj.GetComponent<SquareGridObject> ();
+					List <GameObject> sublinkList = objScript.HexLinkList;
+					if(EvaluateLinkedListForIndex (sublinkList, colorType, 2)) {
+						innerEval = true;
+					}
+
+					eval = innerEval;
+
+				}
+
+				int count = QueryCountScanColors ((int)colorType);
+				if (count >= 3) {
+
+					//if >= 5 -> add powerup
+					QueryScanToMarked ();
+
+					Debug.Log ("########### QueryScanToMarked for color " + colorType.ToString() + "  count = " + count);
+
+				}
+			}
+		}
+
+	}
+
+	private bool EvaluateLinkedListForIndex(List <GameObject> linkList, GemObject.eColorType colorType, int index)
+	{
+		bool eval = false;
+
+		if (linkList == null)
+			return false;
+
+		if (linkList.Count == 0)
+			return false;
+			
+		GameObject linkObj = linkList [index];
+
+		SquareGridObject objectScript = linkObj.GetComponent<SquareGridObject> ();
+
+		if (objectScript._Type == SquareGridObject.eType.Main) {
+
+			if (objectScript.ScanColor == (int)GemObject.eColorType.Black && objectScript.MarkedColor == (int)GemObject.eColorType.Black) {
+
+				GemObject.eColorType cType = objectScript.GetGemRefColorType ();
+
+				if (cType == colorType) {
+					objectScript.ScanColor = (int)colorType;
+					ScannedLinkedList.Add (linkObj);
+					eval = true;
+				}
+
+			}
+		}
+
+
+		return eval;
+	}
+
 
 
 }

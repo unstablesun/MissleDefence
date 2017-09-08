@@ -100,7 +100,7 @@ public class SquareGridLogic : MonoBehaviour
 	}
 
 
-
+/*
 	int[] PreConfigBoard1 = 
 	{ 
 		0, 1, 2, 3, 4, 
@@ -164,11 +164,11 @@ public class SquareGridLogic : MonoBehaviour
 
 	}
 
-
+*/
 
 	private void TryMatchDiagnostic ()
 	{
-		SquareGridManager.Instance.QueryScanAndMark ();
+		SquareGridManager.Instance.QueryScanForLinesAndMark ();
 
 		SquareGridManager.Instance.QueryShowMarkedSquares ();
 	}
